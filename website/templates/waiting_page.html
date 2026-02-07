@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
+</head>
+<body>
+    <header class="header-container">
+        <h1>Processing input...</h1>
+        <nav>
+            <div class="dropdown">
+                <button class="dropbtn">AAPL ▼</button>
+                <div class="dropdown-content">
+                    <a href="">AAPL</a>
+                    <a href="">Alphabet</a>
+                    <a href="">Stock 3</a>
+                </div>
+            </div>
+            <a href="{{ url_for('home') }}" class="admin-link">Return to Main Page</a>
+        </nav>
+    </header>
+
+    <div class="processing-center">
+        <div class="icon-wrapper">
+            <img src="{{ url_for('static', filename="images/placeholder.jpg") }}" class="icon" alt="icon">
+            <p class="icon-desc">placeholder icon</p>
+
+            <br>
+
+            <h2 style="font-size: 30px;">Processing Results...</h2>
+            <p> (Estimated 10 seconds) </p>
+            <h4 style="font-weight: normal;">This will take a while...</h4>
+        </div>
+    </div>
+
+    <p id="test-result"></p>
+
+    <script>
+        const data_json = {{ data_dict | tojson }}
+
+        window.onload = function() {
+            fetch("/run_model", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data_json)})
+            .then(response => response.json())
+            .then(data => {
+                // console.log({{ data_dict | tojson }})
+                location.href = data.redirect;
+            });
+        }
+    </script>
+</body>
+</html>

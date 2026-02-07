@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLP Model</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
+</head>
+<body>
+    <header class="header-container">
+        <h1>NLP Model</h1>
+        <nav>
+            <div class="dropdown">
+                <button class="dropbtn">AAPL ▼</button>
+                <div class="dropdown-content">
+                    <a href="">AAPL</a>
+                    <a href="">Alphabet</a>
+                    <a href="">Stock 3</a>
+                </div>
+            </div>
+            <a href="{{ url_for('home') }}" class="admin-link">Return to User Page</a>
+        </nav>
+    </header>
+
+    <div class="numerical-parameter-info">
+        <h3>Parameter used by model</h3>
+
+        <ul class="numerical-parameter-list">
+            <li>Parameter 1</li>
+            <li>Parameter 2</li>
+            <li>Parameter 3</li>
+            <li>Parameter 4</li>
+        </ul>
+    </div>
+
+    <div class="numerical-scoring-info">
+        <h3>Scoring: </h3>
+
+        <ul class="numerical-scoring-list">
+            <li>Scoring 1</li>
+            <li>Scoring 2</li>
+            <li>Scoring 3</li>
+        </ul>
+    </div>
+
+    <div class="img-text-display">
+        <div class="image-wrapper">
+            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
+            <p>Text 1</p>
+        </div>
+
+        <div class="image-wrapper">
+            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
+            <p>Text 2</p>
+        </div>
+
+        <div>
+            <button class="global-button" style="margin-bottom: 50px;" 
+                onclick="location.href = '{{ url_for('admin.model_testing') }}'">
+                Test Model Performance
+            </button>
+        </div>
+    </div>
+
+    <div class="model-button-position">
+        <button class="global-button" 
+            onclick="location.href = '{{ url_for('admin.numerical_model') }}'">
+            View Numerical Model
+        </button>
+        
+        <button class="global-button" style="margin-right: 20px;" 
+            onclick="location.href = '{{ url_for('admin.admin_page') }}'">
+            Return To Admin Page
+        </button>
+    </div>
+</body>
+</html>

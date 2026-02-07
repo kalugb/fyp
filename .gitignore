@@ -1,0 +1,28 @@
+# Ignore PyTorch model files
+*.pt
+*.pth
+
+# Ignore joblib files
+*.joblib
+
+# Ignore Python cached files
+__pycache__/
+*.pyc
+
+# Ignore .csv files
+*.csv
+
+# Ignore .json files
+*.json
+
+# Ignore .safetensor files (what is that)
+*.safetensors
+
+# Ignore vocab.txt files
+*.txt
+!requirement.txt
+
+# Ignore everything inside saved_model_params folder
+saved_model_params/**/*
+!saved_model_params/**/
+!saved_model_params/.gitkeep

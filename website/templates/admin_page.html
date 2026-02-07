@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
+</head>
+<body>
+    <header class="header-container">
+        <h1>Title</h1>
+        <nav>
+            <div class="dropdown">
+                <button class="dropbtn">AAPL ▼</button>
+                <div class="dropdown-content">
+                    <a href="">AAPL</a>
+                    <a href="">Alphabet</a>
+                    <a href="">Stock 3</a>
+                </div>
+            </div>
+            <a href="{{ url_for('home') }}" class="admin-link">Back to User Page</a>
+        </nav>
+    </header>
+
+    <h2>Welcome Back, Admin</h2>
+
+    <div class="page-center">
+        <div class="image-admin">
+            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" class="global-img">
+            <p class="global-img-desc">placeholder image</p>
+
+            <button class="global-button" onclick="location.href = '{{ url_for('download.download_historical') }}'">
+                Download Dataset
+            </button>
+        </div>
+    </div>
+
+    <div class="button-redirect-admin">
+        <button class="global-button" style="margin-right: 20px" 
+            onclick="location.href = '{{ url_for('admin.numerical_model') }}'">View Numerical Model</button>
+        <button class="global-button" style="margin-left: 20px;" 
+            onclick="location.href = '{{ url_for('admin.nlp_model') }}'">View NLP Model</button>
+    </div>
+</body>
+</html>

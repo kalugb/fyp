@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
+</head>
+<body>
+    <header class="header-container">
+        <h1>Title</h1>
+        <nav>
+            <a href="{{ url_for('home') }}" class="admin-link">Main Page</a>
+        </nav>
+    </header>
+
+    <br>
+
+    <a href="{{ url_for('home') }}" class="return-home"> << Back to main page</a>
+
+    <br> <hr>
+
+    <form class="form-container">
+        <h2>Admin Login</h2>
+
+        <label for="username" class="label-login">Username: </label> <br>
+        <input type="text" placeholder="Username" class="input-login" id="username-input"> <br>
+
+        <label for="password" class="label-login">Password: </label> <br>
+        <input type="password" placeholder="Password" class="input-login" id="password-input"> <br>
+
+        <button class="global-button" style="margin-right: 100px;" 
+                onclick="window.location = '{{ url_for('admin.admin_page') }}'" type="button">
+            Sign In
+        </button>
+        <!-- Clear input  -->
+        <button class="global-button" id="clearBtn">Clear Input</button>
+    </form>
+
+    <script>
+        const clearBtn = document.getElementById("clearBtn");
+        const username_input = document.getElementById("username-input");
+        const password_input = document.getElementById("password-input");
+
+        clearBtn.addEventListener("click", e => {
+            e.preventDefault();
+
+            username_input.value = "";
+            password_input.value = "";
+        });
+    </script>
+</body>
+</html>

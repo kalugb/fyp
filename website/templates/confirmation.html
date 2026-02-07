@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
+</head>
+<body>
+    <header class="header-container">
+        <h1>Confirmation</h1>
+        <nav>
+            <div class="dropdown">
+                <button class="dropbtn">AAPL ▼</button>
+                <div class="dropdown-content">
+                    <a href="">AAPL</a>
+                    <a href="">Alphabet</a>
+                    <a href="">Stock 3</a>
+                </div>
+            </div>
+            <a href="{{ url_for('home') }}" class="admin-link">Back to Main Page</a>
+        </nav>
+    </header>
+
+    <br>
+
+    <a href="{{ url_for('home') }}" class="return-home"> << Back to Main Page </a>
+
+    <hr>
+
+    <form id="confirmation-form" method="post", action="{{ url_for('waiting_page') }}">
+        <div class="input-checking">
+            <label for="closing price myr confirmation" class="global-label">Today Closing Price (In MYR): </label>
+            <input type="text" value="{{ stock_myr }}" class="global-input" id="price-myr" name="priceMYR" readonly> <br> <br>
+
+            <label for="closing price usd confirmation" class="global-label">Today Closing Price (In USD): </label>
+            <input type="text" value="{{ stock_usd }}" class="global-input" id="price-usd" name="priceUSD" style="margin-left: 5px;" readonly> <br> <br> <br>
+
+            <label for="news headline confirmation" class="global-label">Recent News Headline (Topic): </label> <br>
+            <input type="text" value="{{ news_headline }}" class="global-input" name="textSentiment" style="width:75%;" readonly>
+        </div>
+
+        <br>
+
+        <hr>
+
+        <br>
+
+        <div class="input-confirmation">
+            <h2>Are you sure the data provided is accurate?</h2>
+            <p><b>Wrong data</b> will lead to <b>inaccurate results</b>, please make sure the data provided is fully accurate</p>
+
+            <button class="global-button" type="submit" name="confirmationBtn">
+                Yes, start predicting
+            </button>
+            <button class="global-button" style="margin-left: 20px;" type="button"
+                onclick="location.href = '{{ url_for('home') }}'">
+                No, return to previous page
+            </button>
+        </div>
+    </form>
+
+    <br>
+
+    <strong style="color: red;">Disclaimer message</strong>
+
+    <script>
+        price_usd = document.getElementById("price-usd").value;
+        confirmation_form = document.getElementById("confirmation-form");
+
+        if (isNaN(price_usd)) {
+            throw new Error("Input cannot be None. Please return to main page and input a valid closing price")
+        }
+        
+        confirmation_form.addEventListener("submit", () => {
+            window.href = " {{ url_for('waiting_page') }} ";
+        });
+
+    </script>
+</body>
+</html>

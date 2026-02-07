@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
+</head>
+<body>
+    <!-- The header and the nav -->
+    <header class="header-container">
+        <h1>Title</h1>
+        <nav>
+            <div class="dropdown">
+                <button class="dropbtn">AAPL ▼</button>
+                <div class="dropdown-content">
+                    <a href="">AAPL</a>
+                    <a href="">Alphabet</a>
+                    <a href="">Stock 3</a>
+                </div>
+            </div>
+            <a href="{{ url_for('admin.admin_login') }}" class="admin-link">Admin Login</a>
+        </nav>
+    </header>
+
+    <!-- Stock info -->
+    <div style="margin-bottom: 50px">
+        <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" class="global-img" alt="placeholder image">
+        <p class="global-img-desc">placeholder image</p>
+
+        <p>Info 1</p>
+        <p>Info 2</p>
+        <p>Info 3</p>
+
+        <!-- JS linking for downloading dataset later -->
+        <button class="global-button" id="download-btn" 
+            onclick="location.href = '{{ url_for('download.download_historical') }}'">
+        Download Dataset
+        </button>
+    </div>
+
+    <hr>
+
+    <form action="{{ url_for('get_data') }}" method="post">
+        <h2>Stock Market Prediction</h2>
+
+        <div>
+            <!-- Input number, others will auto fill in during conversion -->
+            <label for="price-myr" class="global-label">Enter Today's Closing Price (In MYR):</label>
+            <input type="number" id="price-myr" placeholder="RM" step="0.01" class="global-input" name="stockPriceMYR"> <br> <br>
+
+            <label for="price-usd" class="global-label">Enter Today's Closing Price (In USD):</label>
+            <input type="number" id="price-usd" placeholder="USD" step="0.01" class="global-input" style="margin-left: 5px" name="stockPriceUSD"> <br> <br>
+
+            <button class="global-button" type="button" id="retrieve-data"> Retrieve Current Closing Price</button>
+
+            <p id="loading-msg"></p>
+
+            <p>{{ error }}</p>
+        </div>
+
+        <br>
+
+        <div>
+            <h2>News Headline</h2>
+
+            <label for="news-headline" class="global-label">Enter Recent News Headline (Topic):</label> <br>
+            <input type="text" id="news-headline" placeholder="News headline" class="global-input" style="width: 50%" name="newsHeadline"> <br> <br>
+        </div>
+
+        <div>
+            <button class="global-button", type="submit" id="predict">Predict</button>
+
+            <h4>Important: Ensure the info is correct before predicting</h4>
+            <strong style="color: red">Disclaimer Message</strong> <br> <br>
+        </div>
+
+        <button class="global-button" type="button" id="scroll-to-top-btn">Back To Top</button>
+    </form>
+
+    <footer>
+
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const price_myr = document.getElementById("price-myr");
+            const price_usd = document.getElementById("price-usd");
+            const retrieve_btn = document.getElementById("retrieve-data");
+            const scroll_btn = document.getElementById("scroll-to-top-btn")
+
+            price_myr.addEventListener("input", () => {
+                const myr = parseFloat(price_myr.value);
+
+                if (isNaN(myr)) { 
+                    price_usd.value = ""; 
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("stockPriceMYR", myr)
+
+                fetch("/convert_to_usd", {method: "POST", body: formData})
+                .then(response => response.json())
+                .then(results => {
+                    price_usd.value = parseFloat(results.data).toFixed(2)
+                })
+            })
+            
+            price_usd.addEventListener("input", () => {
+                const usd = parseFloat(price_usd.value);
+
+                if (isNaN(usd)) { 
+                    price_myr.value = ""; 
+                    return;
+                }
+
+                const formData = new FormData()
+                formData.append("stockPriceUSD", usd)
+
+                fetch("/convert_to_myr", {method: "POST", body: formData})
+                .then(response => response.json())
+                .then(results => {
+                    price_myr.value = parseFloat(results.data).toFixed(2)
+                })
+            })
+
+            retrieve_btn.addEventListener("click", () => {
+                const loading_msg = document.getElementById("loading-msg");
+                loading_msg.innerHTML = "Getting latest data...";
+
+                fetch("/retrieve_data", {method: "POST"})
+                .then(response => response.json())
+                .then(results => {
+                    price_usd.value = parseFloat(results.data_usd).toFixed(2);
+                    price_myr.value = parseFloat(results.data_myr).toFixed(2);
+                })
+                .catch(err => console.error(err))
+                .finally(() => {
+                    loading_msg.innerHTML = "";
+                });
+            })
+
+            scroll_btn.addEventListener("click", () => {
+                window.scrollTo({
+                    top: 0,
+                })
+            })
+        });
+    </script>
+</body>
+</html>
