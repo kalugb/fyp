@@ -24,5 +24,8 @@ __pycache__/
 
 # Ignore everything inside saved_model_params folder
 saved_model_params/**/*
-!saved_model_params/**/
+!saved_model_params/finbert_utils/*.gitkeep
+!saved_model_params/tokenizer_utils/*.gitkeep
+!saved_model_params/json_files/*.gitkeep
+!saved_model_params/pt_files/*.gitkeep
 !saved_model_params/.gitkeep
