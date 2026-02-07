@@ -53,6 +53,9 @@
             <label for="price-usd" class="global-label">Enter Today's Closing Price (In USD):</label>
             <input type="number" id="price-usd" placeholder="USD" step="0.01" class="global-input" style="margin-left: 5px" name="stockPriceUSD"> <br> <br>
 
+            <p style="font-size: 120%">Current conversion rate: </p>
+            <p style="font-size: 120%; margin-top: -10px">1 USD: {{ conversion_rate }} MYR</p>
+
             <button class="global-button" type="button" id="retrieve-data"> Retrieve Current Closing Price</button>
 
             <p id="loading-msg"></p>

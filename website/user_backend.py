@@ -4,7 +4,7 @@ import pandas as pd
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from website.backend_functions import update_dataset, generate_session_key
+from website.backend_functions import update_dataset, generate_session_key, get_exchange_rate
 from admin_backend import admin_app
 from download_backend import download_app
 
@@ -18,12 +18,12 @@ app.register_blueprint(download_app)
 app.secret_key = generate_session_key()
 
 # will change to real time later
-conversion_rate = 4
+conversion_rate = get_exchange_rate()
 
 # main_page.html
 @app.route("/")
 def home():
-    return render_template("main_page.html", name="Main Page")
+    return render_template("main_page.html", name="Main Page", conversion_rate=f"{conversion_rate:.2f}")
 
 # retrieve latest closing price
 @app.route("/retrieve_data", methods=["POST"])

@@ -20,6 +20,14 @@ def generate_session_key():
     
     return str(session_key)
 
+def get_exchange_rate():
+    from forex_python.converter import CurrencyRates
+    c = CurrencyRates()
+    
+    rate = c.get_rate("USD", "MYR")
+    
+    return rate
+
 def get_last_trading_day():
     today = datetime.today() - timedelta(hours=20.5)
     
@@ -103,6 +111,8 @@ def update_dataset(df_path):
     return raw_df
     
 if __name__ == "__main__":
-    raw_df = update_dataset(raw_inference_path)
+    # raw_df = update_dataset(raw_inference_path)
+    
+    print(get_exchange_rate())
     
     
