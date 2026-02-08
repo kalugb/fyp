@@ -39,13 +39,19 @@
     <p id="test-result"></p>
 
     <script>
-        const data_json = {{ data_dict | tojson }}
+        const num_data = {{ num_data | tojson }}
+        const nlp_data = {{ nlp_data | tojson }}
 
         window.onload = function() {
-            fetch("/run_model", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data_json)})
+            fetch("/run_model", {method: "POST", 
+                headers: {"Content-Type": "application/json"}, 
+                body: JSON.stringify({
+                    "num_data": num_data,
+                    "nlp_data": nlp_data
+                })
+            })
             .then(response => response.json())
             .then(data => {
-                // console.log({{ data_dict | tojson }})
                 location.href = data.redirect;
             });
         }

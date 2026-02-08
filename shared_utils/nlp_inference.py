@@ -1,5 +1,3 @@
-import time
-
 import torch
 import torch.nn.functional as F
 
@@ -32,9 +30,7 @@ model = AutoModelForSequenceClassification.from_pretrained(finbert_utils_path, n
 
 model.eval()
 
-def predict():
-    text = "Intel stock plunges as hopes for a 'clean' turnaround story meet reality"
-    
+def predict_sentiment(text):
     encoding = tokenizer(text, **tokenizer_params)
     
     input_ids = encoding["input_ids"].to(device)
@@ -46,23 +42,22 @@ def predict():
         logits = output.logits
         
         probabilities = F.softmax(logits, dim=1).cpu().numpy().squeeze(0)
-        prediction = torch.argmax(logits, dim=1).cpu().numpy()
+        sentiment_label = torch.argmax(logits, dim=1).cpu().numpy()
         sentiment = ""
         
         probability_list = f"Negative: {probabilities[0].item():.4f}, Neutral: {probabilities[1].item():.4f}, Positive: {probabilities[2].item():.4f}"
 
-        if prediction == 0:
+        if sentiment_label == 0:
             sentiment = "Negative"
-        elif prediction == 1:
+        elif sentiment_label == 1:
             sentiment = "Neutral"
-        elif prediction == 2:
+        elif sentiment_label == 2:
             sentiment = "Positive"
         else:
+            sentiment = "Undefined"
             print("Something went wrong. You shouldn't be here") 
-            
-        print(f"Sentiment: {sentiment}")
-        print("Sentiment probability list:")
-        print(probability_list)
+        
+        return sentiment, (sentiment_label - 1).item(), probability_list
        
 if __name__ == "__main__": 
-    predict()
+    print(predict_sentiment("Intel stock plunges as hopes for a 'clean' turnaround story meet reality"))

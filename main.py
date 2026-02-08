@@ -1,10 +1,9 @@
-import string
-import secrets
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
-total_characters = string.ascii_letters + string.digits
-session_key_length = 32 + secrets.randbelow(len(total_characters) - 32)
+df = pd.read_csv("csv_files/inference/historical_data.csv", index_col=0)
 
-session_key = "".join(secrets.choice(total_characters) for _ in range(session_key_length))
-
-print(session_key_length)
-print(session_key)
+plt.figure(figsize=(16, 12))
+plt.plot(df["Adj Close"][5000:], color="blue", label="Adjusted Closing Price")
+plt.show()

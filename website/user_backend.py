@@ -17,7 +17,7 @@ app.register_blueprint(admin_app)
 app.register_blueprint(download_app)
 app.secret_key = generate_session_key()
 
-# will change to real time later
+# get current conversion rate
 conversion_rate = get_exchange_rate()
 
 # main_page.html
@@ -61,6 +61,7 @@ def get_data():
             return render_template("main_page.html", error=error,
                                 stock_myr=stock_myr, 
                                 stock_usd=stock_usd,
+                                conversion_rate=f"{conversion_rate:.2f}",
                                 news_headline=news_headline)
         else:
             stock_myr = float(stock_myr)
@@ -71,6 +72,7 @@ def get_data():
             return render_template("main_page.html", error=error,
                                 stock_myr=stock_myr, 
                                 stock_usd=stock_usd,
+                                conversion_rate=f"{conversion_rate:.2f}",
                                 news_headline=news_headline)
 
     except ValueError:
@@ -78,6 +80,7 @@ def get_data():
         return render_template("main_page.html", error=error,
                                 stock_myr=stock_myr, 
                                 stock_usd=stock_usd,
+                                conversion_rate=f"{conversion_rate:.2f}",
                                 news_headline=news_headline)
 
     if not news_headline:
@@ -109,27 +112,29 @@ def waiting_page():
     df = mean_reversion(df)
     data = df.iloc[-1, :-1]
     
-    data_dict = {"Adj Close": data.iloc[0], "returns": data.iloc[1], "ma": data.iloc[2], "ratio": data.iloc[3], "text": str(text)}
+    num_data = {"adj_close": data.iloc[0], "returns": data.iloc[1], "ma": data.iloc[2], "ratio": data.iloc[3]}
+    nlp_data = {"text": str(text)}
     
-    return render_template("waiting_page.html", data_dict=data_dict)
+    return render_template("waiting_page.html", num_data=num_data, nlp_data=nlp_data)
 
-    
+# get result, user at waiting page
 @app.route("/run_model", methods=["POST"])
 def run_model():
-    data = request.get_json()
+    from shared_utils.num_inference import predict_position
+    from shared_utils.nlp_inference import predict_sentiment
     
-    # fetch model logic here
-    # below just placeholder
+    data = request.get_json()
+    num_data = data["num_data"]
+    nlp_data = data["nlp_data"]
 
-    num_result = "Positive"
-    nlp_result = "Neutral"
-    num_label = -1
-    nlp_label = 0
+    num_result, num_label, _ = predict_position(**num_data)
+    nlp_result, nlp_label, _ = predict_sentiment(**nlp_data) if nlp_data["text"] != "" else ("No news headline given", 0, 0)
     
     session["result"] = {"num": [num_result, str(num_label)], "nlp": [nlp_result, str(nlp_label)]}
     
     return jsonify(redirect=url_for("result"))
 
+# result fetched, user at result page
 @app.route("/result")
 def result():
     data = session["result"]
@@ -140,12 +145,16 @@ def result():
     overall_label = int(num_label) + int(nlp_label)
     overall_result = ""
     
-    if overall_label in (-2, -1):
-        overall_result = "Not gay"
+    if overall_label == -2:
+        overall_result = "Strong sell position"
+    elif overall_label == -1:
+        overall_result = "Sell position"
     elif overall_label == 0:
-        overall_result = "Gay"
-    elif overall_label in (1, 2):
-        overall_result = "Double gay ahhh"
+        overall_result = "Hold position"
+    elif overall_label == 1:
+        overall_result = "Buy position"
+    elif overall_label == 2:
+        overall_result = "Strong buy position"
     else:
         print("Undefined results")
         overall_result = "Undefined"
