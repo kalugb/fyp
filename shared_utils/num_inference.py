@@ -4,7 +4,6 @@ from shared_utils.load_utils import load_num_model
 
 model = load_num_model()
 
-# will continue after having inference plan
 def predict_position(adj_close, returns, ma, ratio):
     data = [[adj_close, returns, ma, ratio]] 
     columns = ["Adj Close", "returns", "ma", "ratio"]

@@ -30,7 +30,7 @@
 
             <br>
 
-            <h2 style="font-size: 30px;">Processing Results...</h2>
+            <h2 id="result-text" style="font-size: 30px;">Processing Results</h2>
             <p> (Estimated 10 seconds) </p>
             <h4 style="font-weight: normal;">This will take a while...</h4>
         </div>
@@ -41,6 +41,16 @@
     <script>
         const num_data = {{ num_data | tojson }}
         const nlp_data = {{ nlp_data | tojson }}
+        const result_text = document.getElementById("result-text");
+        const base_text = "Processing Results"
+        let dots = 0;
+
+        setInterval(() => {
+            dots = dots % 7;
+
+            result_text.innerHTML = base_text + ".".repeat(dots);
+            dots++
+        }, 500)
 
         window.onload = function() {
             fetch("/run_model", {method: "POST", 

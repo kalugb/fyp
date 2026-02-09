@@ -121,14 +121,18 @@ def waiting_page():
 @app.route("/run_model", methods=["POST"])
 def run_model():
     from shared_utils.num_inference import predict_position
-    from shared_utils.nlp_inference import predict_sentiment
     
     data = request.get_json()
     num_data = data["num_data"]
     nlp_data = data["nlp_data"]
 
     num_result, num_label, _ = predict_position(**num_data)
-    nlp_result, nlp_label, _ = predict_sentiment(**nlp_data) if nlp_data["text"] != "" else ("No news headline given", 0, 0)
+    
+    if nlp_data["text"] != "":
+        from shared_utils.nlp_inference import predict_sentiment
+        nlp_result, nlp_label, _ = predict_sentiment(**nlp_data)
+    else:
+        nlp_result, nlp_label = "No news headline given", 0
     
     session["result"] = {"num": [num_result, str(num_label)], "nlp": [nlp_result, str(nlp_label)]}
     
@@ -165,7 +169,7 @@ def result():
                            overall_result=overall_result)
     
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
     
     
     
