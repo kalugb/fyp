@@ -39,6 +39,8 @@
 
             <label for="news headline confirmation" class="global-label">Recent News Headline (Topic): </label> <br>
             <input type="text" value="{{ news_headline }}" class="global-input" name="textSentiment" style="width:75%;" readonly>
+
+            <p style="font-size: 20px;">{{ advice_msg | safe }}</p>
         </div>
 
         <br>
@@ -63,7 +65,9 @@
 
     <br>
 
-    <strong style="color: red;">Disclaimer message</strong>
+    <strong style="color: red;">The results made by the model are only meant for educational purpose, 
+                do not treat it as confirmation for your trading strategy.
+    </strong>
 
     <script>
         price_usd = document.getElementById("price-usd").value;

@@ -62,7 +62,8 @@ def get_data():
                                 stock_myr=stock_myr, 
                                 stock_usd=stock_usd,
                                 conversion_rate=f"{conversion_rate:.2f}",
-                                news_headline=news_headline)
+                                news_headline=news_headline,
+                                show_error=True)
         else:
             stock_myr = float(stock_myr)
             stock_usd = float(stock_usd)
@@ -73,7 +74,8 @@ def get_data():
                                 stock_myr=stock_myr, 
                                 stock_usd=stock_usd,
                                 conversion_rate=f"{conversion_rate:.2f}",
-                                news_headline=news_headline)
+                                news_headline=news_headline,
+                                show_error=True)
 
     except ValueError:
         error = "Please enter a valid number (2 significant number) for the closing price"
@@ -81,15 +83,19 @@ def get_data():
                                 stock_myr=stock_myr, 
                                 stock_usd=stock_usd,
                                 conversion_rate=f"{conversion_rate:.2f}",
-                                news_headline=news_headline)
+                                news_headline=news_headline,
+                                show_error=True)
 
+    advice_msg = ""
     if not news_headline:
         news_headline = "(No news headline given)"
+        advice_msg = "Tips: It is better to input a news headline for <b>better and more robust prediction</b>."
     
     return render_template("confirmation.html", 
                            stock_myr="{:.2f}".format(stock_myr), 
                            stock_usd="{:.2f}".format(stock_usd),
-                           news_headline=news_headline)
+                           news_headline=news_headline,
+                           advice_msg=advice_msg)
 
 # waiting_page.html (from confirmation.html)
 @app.route("/waiting_page", methods=["POST"])
@@ -173,7 +179,7 @@ def result():
                            overall_result=overall_result)
     
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=True)
     
     
     
