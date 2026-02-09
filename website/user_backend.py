@@ -133,6 +133,10 @@ def run_model():
         nlp_result, nlp_label, _ = predict_sentiment(**nlp_data)
     else:
         nlp_result, nlp_label = "No news headline given", 0
+        
+    # debugging purpose
+    # import time
+    # time.sleep(100000)
     
     session["result"] = {"num": [num_result, str(num_label)], "nlp": [nlp_result, str(nlp_label)]}
     

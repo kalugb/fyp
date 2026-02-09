@@ -33,6 +33,11 @@
             <h2 id="result-text" style="font-size: 30px;">Processing Results</h2>
             <p> (Estimated 10 seconds) </p>
             <h4 style="font-weight: normal;">This will take a while...</h4>
+
+            <div class="tip-container">
+                <h3>Tips: </h3>
+                <p id="tips-display" style="margin: 0px;">Display</p>
+            </div>
         </div>
     </div>
 
@@ -42,15 +47,60 @@
         const num_data = {{ num_data | tojson }}
         const nlp_data = {{ nlp_data | tojson }}
         const result_text = document.getElementById("result-text");
-        const base_text = "Processing Results"
+        const tips_display = document.getElementById("tips-display");
+
+        const base_text = "Processing Results";
+        const text_list = [
+            "Investors are showing signs of fear amid rising volatility.",
+            "Optimism grows after strong earnings reports.",
+            "Panic selling may be driving prices below fair value.",
+            "Positive news flow supports upward momentum.",
+            "Uncertainty in global markets weakens investor confidence.",
+            "Negative headlines create short-term pressure.",
+            "Risk appetite is returning to the market.",
+            "Prices trading far above historical averages often correct.",
+            "Extreme deviations from fair value can signal reversion opportunities.",
+            "After sharp rallies, pullbacks are common.",
+            "Oversold conditions may present bounce potential.",
+            "Mean reversion strategies rely on statistical equilibrium.",
+            "Short-term anomalies tend to fade over time.",
+            "Markets often correct after excessive optimism.",
+            "Diversification reduces portfolio risk.",
+            "Risk management is more important than chasing returns.",
+            "Never invest money you cannot afford to lose.",
+            "Long-term investing often outperforms frequent trading.",
+            "Emotional discipline is key to successful trading.",
+            "Consistency beats occasional big wins.",
+            "Position sizing helps control downside risk.",
+            "Compounding rewards patient investors.",
+            "Avoid making decisions based solely on headlines.",
+            "Review your strategy regularly and adjust when needed.",
+            "Use stop-loss orders to limit potential losses.",
+            "Trend-following strategies aim to capture sustained momentum.",
+            "Support and resistance levels guide entry and exit points.",
+            "Moving averages help identify trend direction.",
+            "RSI can indicate overbought or oversold conditions.",
+            "Fundamental analysis evaluates company performance.",
+            "Technical analysis studies price patterns and indicators.",
+            "Backtesting helps validate a trading strategy."
+        ];
+
         let dots = 0;
+
+        function display_tips() {
+            let randInt = Math.floor(Math.random() * text_list.length);
+            tips_display.innerHTML = text_list[randInt];
+        }
 
         setInterval(() => {
             dots = dots % 7;
 
             result_text.innerHTML = base_text + ".".repeat(dots);
-            dots++
-        }, 500)
+            dots++;
+        }, 500);
+
+        display_tips();
+        setInterval(display_tips, 5000);
 
         window.onload = function() {
             fetch("/run_model", {method: "POST", 

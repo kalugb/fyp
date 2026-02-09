@@ -189,6 +189,7 @@ body {
     justify-content: center;
     align-items: flex-start;
     gap: 40px;
+    font-size: 15px;
 }
 .icon-wrapper {
     display: flex;
@@ -203,6 +204,21 @@ body {
 }
 .icon-desc {
     text-align: center;
+}
+.tip-container {
+    display: flex;
+    padding: 20px;
+    padding-left: 100px;
+    padding-right: 100px;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+.tip-container h3, .tip-container p {
+    margin: 0px;
+    padding: 5px;
+    font-size: 17.5px;
 }
 
 /* Styling for numerical_model.html and nlp_model.html*/
