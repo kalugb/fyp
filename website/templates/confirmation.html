@@ -1,35 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
-</head>
-<body>
-    <header class="header-container">
-        <h1>Confirmation</h1>
-        <nav>
-            <div class="dropdown">
-                <button class="dropbtn">AAPL ▼</button>
-                <div class="dropdown-content">
-                    <a href="">AAPL</a>
-                    <a href="">Alphabet</a>
-                    <a href="">Stock 3</a>
-                </div>
-            </div>
-            <a href="{{ url_for('home') }}" class="admin-link">Return to Main Page</a>
-        </nav>
-    </header>
+{% block head_title %}Confirmation{% endblock %}
 
-    <br>
+{% block admin_link %}<a href="{{ url_for('home') }}" class="admin-link">Return to Main Page</a>{% endblock %}
 
-    <a href="{{ url_for('home') }}" class="return-home"> << Back to Main Page </a>
+{% block after_header %}
+<br>
+<a href="{{ url_for('home') }}" class="return-home"> << Back to Main Page </a>
+<hr>
+{% endblock %}
 
-    <hr>
-
-    <form id="confirmation-form" method="post", action="{{ url_for('waiting_page') }}">
+{% block content %}
+<main>
+    <form id="confirmation-form" method="post" action="{{ url_for('waiting_page') }}">
         <div class="input-checking">
             <label for="closing price myr confirmation" class="global-label">Today Closing Price (In MYR): </label>
             <input type="text" value="{{ stock_myr }}" class="global-input" id="price-myr" name="priceMYR" readonly> <br> <br>
@@ -68,19 +51,14 @@
     <strong style="color: red;">The results made by the model are only meant for educational purpose, 
                 do not treat it as confirmation for your trading strategy.
     </strong>
+</main>
 
-    <script>
-        price_usd = document.getElementById("price-usd").value;
-        confirmation_form = document.getElementById("confirmation-form");
+<script>
+    price_usd = document.getElementById("price-usd").value;
+    confirmation_form = document.getElementById("confirmation-form");
 
-        if (isNaN(price_usd)) {
-            throw new Error("Input cannot be None. Please return to main page and input a valid closing price")
-        }
-        
-        confirmation_form.addEventListener("submit", () => {
-            window.href = " {{ url_for('waiting_page') }} ";
-        });
-
-    </script>
-</body>
-</html>
+    if (isNaN(parseFloat(price_usd))) {
+        throw new Error("Input cannot be None. Please return to main page and input a valid closing price")
+    }
+</script>
+{% endblock %}

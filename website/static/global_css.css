@@ -8,11 +8,35 @@
 
 html {
     scroll-behavior: smooth;
+    height: 100%;
 }
-
 body {
     margin: 10px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+main {
+    flex: 1;
+}
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-bottom: -30px;
+    padding: 10px;
+    border-top: 1px solid black;
+    background-color: lightgrey;
+}
+footer p {
+    margin: 0px;
+    font-size: 15px;
+    padding: 10px;
 }
 
 .header-container {

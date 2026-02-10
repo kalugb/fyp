@@ -1,28 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename="global_css.css") }}">
-</head>
-<body>
-    <header class="header-container">
-        <h1>Results</h1>
-        <nav>
-            <div class="dropdown">
-                <button class="dropbtn">AAPL ▼</button>
-                <div class="dropdown-content">
-                    <a href="">AAPL</a>
-                    <a href="">Alphabet</a>
-                    <a href="">Stock 3</a>
-                </div>
-            </div>
-            <a href="{{ url_for('home') }}" class="admin-link">Return to Main Page</a>
-        </nav>
-    </header>
+{% block head_title %}Confirmation{% endblock %}
 
+{% block admin_link %}<a href="{{ url_for('home') }}" class="admin-link">Return to Main Page</a>{% endblock %}
+
+{% block content %}
+<main>
     <form class="result-form">
         <label for="stock market analysis results" class="global-label">Stock Market Price Analysis: </label>
         <input type="text" value="{{ num_result }}" class="global-input" style="margin-left: 59px" readonly> <br> <br>
@@ -47,5 +30,5 @@
     <button class="global-button" onclick="location.href = '{{ url_for('home') }}'">
         Back to Main Page
     </button>
-</body>
-</html>
+</main>
+{% endblock %}

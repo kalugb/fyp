@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Stock Market Analysis{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
+</head>
+<body>
+    <header class="header-container">
+        <h1>{% block head_title %}Home{% endblock %}</h1>
+        <nav>
+            <div class="dropdown">
+                <button class="dropbtn">AAPL ▼</button>
+                <div class="dropdown-content">
+                    <a href="">AAPL</a>
+                    <a href="">Alphabet</a>
+                    <a href="">Stock 3</a>
+                </div>
+            </div>
+            {% block admin_link %}
+            <a href="{{ url_for('admin.admin_login') }}" class="admin-link">Admin Login</a> 
+            {% endblock %}
+        </nav>
+    </header>
+
+    {% block after_header %}{% endblock %}
+
+    {% block content %}{% endblock %}
+
+
+    <footer>
+        <p>Stock Market Analysis&copy; | Daniel Yong</p>
+        <p>Contact: 0123456789</p>
+        {% block admin_mode %}{% endblock %}
+    </footer>
+</body>
+</html>

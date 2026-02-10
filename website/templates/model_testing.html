@@ -1,28 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Testing</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
-</head>
-<body>
-    <header class="header-container">
-        <h1>Test Model Performance</h1>
-        <nav>
-            <div class="dropdown">
-                <button class="dropbtn">AAPL ▼</button>
-                <div class="dropdown-content">
-                    <a href="">AAPL</a>
-                    <a href="">Alphabet</a>
-                    <a href="">Stock 3</a>
-                </div>
-            </div>
-            <a href="{{ url_for('home') }}" class="admin-link">Return to User Page</a>
-        </nav>
-    </header>
+{% block head_title%}Model Testing{% endblock %}
 
+{% block admin_link %}<a href="{{ url_for('home') }}" class="admin-link"> Return to Main Page</a>{% endblock %}
+
+{% block after_header %}
+<br>
+<a href="{{ url_for('admin.admin_page') }}" class="return-home"> << Back to admin page</a>
+<br>
+{% endblock %}
+
+{% block content %}
+<main>
     <br>
 
     <form action="{{ url_for('admin.upload_files') }}" class="form-model_testing", 
@@ -80,45 +69,45 @@
             Return to Admin Page
         </button>
     </div>
+</main>
 
-    <script>
-        const num_ul = document.getElementById("num-result");
-        const nlp_ul = document.getElementById("nlp-result");
-        const form = document.getElementById("upload-form");
-        const display_waiting = document.getElementById("display-waiting")
+<script>
+    const num_ul = document.getElementById("num-result");
+    const nlp_ul = document.getElementById("nlp-result");
+    const form = document.getElementById("upload-form");
+    const display_waiting = document.getElementById("display-waiting")
 
-        function appendul(listId, result) {
-            const ul = document.getElementById(listId);
-            
-            result.forEach(value => {
-                const li = document.createElement("li");
-                li.textContent = value;
-                ul.appendChild(li);
-            });
-        }
-
-        form.addEventListener("submit", e => {
-            e.preventDefault();
-            display_waiting.innerHTML = "Model testing, this will take a while. Please wait... (Estimated 15 seconds)"
-            num_ul.innerHTML = "";
-            nlp_ul.innerHTML = "";
-
-            const formData = new FormData(form);
+    function appendul(listId, result) {
+        const ul = document.getElementById(listId);
         
-            fetch("/upload_files", {method: "POST", body: formData})
-            .then(response => response.json())
-            .then(res => {
-                if (res.error) {
-                    alert(res.error);
-                    display_waiting.innerHTML = "Please upload at least one file in one of the field"
-                    return;
-                }
-
-                appendul("num-result", [res.num_precision, res.num_recall, res.num_f1]);
-                appendul("nlp-result", [res.nlp_precision, res.nlp_recall, res.nlp_f1]);
-                display_waiting.innerHTML = "Model testing completed"
-            });
+        result.forEach(value => {
+            const li = document.createElement("li");
+            li.textContent = value;
+            ul.appendChild(li);
         });
-    </script>
-</body>
-</html>
+    }
+
+    form.addEventListener("submit", e => {
+        e.preventDefault();
+        display_waiting.innerHTML = "Model testing, this will take a while. Please wait... (Estimated 15 seconds)"
+        num_ul.innerHTML = "";
+        nlp_ul.innerHTML = "";
+
+        const formData = new FormData(form);
+    
+        fetch("/upload_files", {method: "POST", body: formData})
+        .then(response => response.json())
+        .then(res => {
+            if (res.error) {
+                alert(res.error);
+                display_waiting.innerHTML = "Please upload at least one file in one of the field"
+                return;
+            }
+
+            appendul("num-result", [res.num_precision, res.num_recall, res.num_f1]);
+            appendul("nlp-result", [res.nlp_precision, res.nlp_recall, res.nlp_f1]);
+            display_waiting.innerHTML = "Model testing completed"
+        });
+    });
+</script>
+{% endblock %}

@@ -1,28 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
-</head>
-<body>
-    <header class="header-container">
-        <h1>Title</h1>
-        <nav>
-            <div class="dropdown">
-                <button class="dropbtn">AAPL ▼</button>
-                <div class="dropdown-content">
-                    <a href="">AAPL</a>
-                    <a href="">Alphabet</a>
-                    <a href="">Stock 3</a>
-                </div>
-            </div>
-            <a href="{{ url_for('home') }}" class="admin-link">Back to User Page</a>
-        </nav>
-    </header>
+{% block head_title%}Admin Page{% endblock %}
 
+{% block admin_link %}<a href="{{ url_for('home') }}" class="admin-link"> Return to Main Page</a>{% endblock %}
+
+{% block content %}
+<main>
     <h2>Welcome Back, Admin</h2>
 
     <div class="page-center">
@@ -42,5 +25,7 @@
         <button class="global-button" style="margin-left: 20px;" 
             onclick="location.href = '{{ url_for('admin.nlp_model') }}'">View NLP Model</button>
     </div>
-</body>
-</html>
+</main>
+{% endblock %}
+
+{% block admin_mode %}<p style="color: red;"><b>Currently in Admin Mode</b></p>{% endblock %}

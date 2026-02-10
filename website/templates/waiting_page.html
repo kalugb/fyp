@@ -1,28 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processing</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
-</head>
-<body>
-    <header class="header-container">
-        <h1>Processing input...</h1>
-        <nav>
-            <div class="dropdown">
-                <button class="dropbtn">AAPL ▼</button>
-                <div class="dropdown-content">
-                    <a href="">AAPL</a>
-                    <a href="">Alphabet</a>
-                    <a href="">Stock 3</a>
-                </div>
-            </div>
-            <a href="{{ url_for('home') }}" class="admin-link">Return to Main Page</a>
-        </nav>
-    </header>
+{% block head_title %}Confirmation{% endblock %}
 
+{% block admin_link %}<a href="{{ url_for('home') }}" class="admin-link">Return to Main Page</a>{% endblock %}
+
+{% block content%}
+<main>
     <div class="processing-center">
         <div class="icon-wrapper">
             <img src="{{ url_for('static', filename="images/placeholder.jpg") }}" class="icon" alt="icon">
@@ -42,80 +25,80 @@
     </div>
 
     <p id="test-result"></p>
+</main>
 
-    <script>
-        const num_data = {{ num_data | tojson }}
-        const nlp_data = {{ nlp_data | tojson }}
-        const result_text = document.getElementById("result-text");
-        const tips_display = document.getElementById("tips-display");
+<script>
+    const num_data = {{ num_data | tojson }}
+    const nlp_data = {{ nlp_data | tojson }}
+    const result_text = document.getElementById("result-text");
+    const tips_display = document.getElementById("tips-display");
 
-        const base_text = "Processing Results";
-        const text_list = [
-            "First time loading the model usually takes longer time, so yeah please be patience",
-            "Investors are showing signs of fear amid rising volatility.",
-            "Optimism grows after strong earnings reports.",
-            "Panic selling may be driving prices below fair value.",
-            "Positive news flow supports upward momentum.",
-            "Uncertainty in global markets weakens investor confidence.",
-            "Negative headlines create short-term pressure.",
-            "Risk appetite is returning to the market.",
-            "Prices trading far above historical averages often correct.",
-            "Extreme deviations from fair value can signal reversion opportunities.",
-            "After sharp rallies, pullbacks are common.",
-            "Oversold conditions may present bounce potential.",
-            "Mean reversion strategies rely on statistical equilibrium.",
-            "Short-term anomalies tend to fade over time.",
-            "Markets often correct after excessive optimism.",
-            "Diversification reduces portfolio risk.",
-            "Risk management is more important than chasing returns.",
-            "Never invest money you cannot afford to lose.",
-            "Long-term investing often outperforms frequent trading.",
-            "Emotional discipline is key to successful trading.",
-            "Consistency beats occasional big wins.",
-            "Position sizing helps control downside risk.",
-            "Compounding rewards patient investors.",
-            "Avoid making decisions based solely on headlines.",
-            "Review your strategy regularly and adjust when needed.",
-            "Use stop-loss orders to limit potential losses.",
-            "Trend-following strategies aim to capture sustained momentum.",
-            "Support and resistance levels guide entry and exit points.",
-            "Moving averages help identify trend direction.",
-            "RSI can indicate overbought or oversold conditions.",
-            "Fundamental analysis evaluates company performance.",
-            "Technical analysis studies price patterns and indicators.",
-            "Backtesting helps validate a trading strategy."
-        ];
+    const base_text = "Processing Results";
+    const text_list = [
+        "First time loading the model usually takes longer time, so yeah please be patience",
+        "Investors are showing signs of fear amid rising volatility.",
+        "Optimism grows after strong earnings reports.",
+        "Panic selling may be driving prices below fair value.",
+        "Positive news flow supports upward momentum.",
+        "Uncertainty in global markets weakens investor confidence.",
+        "Negative headlines create short-term pressure.",
+        "Risk appetite is returning to the market.",
+        "Prices trading far above historical averages often correct.",
+        "Extreme deviations from fair value can signal reversion opportunities.",
+        "After sharp rallies, pullbacks are common.",
+        "Oversold conditions may present bounce potential.",
+        "Mean reversion strategies rely on statistical equilibrium.",
+        "Short-term anomalies tend to fade over time.",
+        "Markets often correct after excessive optimism.",
+        "Diversification reduces portfolio risk.",
+        "Risk management is more important than chasing returns.",
+        "Never invest money you cannot afford to lose.",
+        "Long-term investing often outperforms frequent trading.",
+        "Emotional discipline is key to successful trading.",
+        "Consistency beats occasional big wins.",
+        "Position sizing helps control downside risk.",
+        "Compounding rewards patient investors.",
+        "Avoid making decisions based solely on headlines.",
+        "Review your strategy regularly and adjust when needed.",
+        "Use stop-loss orders to limit potential losses.",
+        "Trend-following strategies aim to capture sustained momentum.",
+        "Support and resistance levels guide entry and exit points.",
+        "Moving averages help identify trend direction.",
+        "RSI can indicate overbought or oversold conditions.",
+        "Fundamental analysis evaluates company performance.",
+        "Technical analysis studies price patterns and indicators.",
+        "Backtesting helps validate a trading strategy."
+    ];
 
-        let dots = 0;
+    let dots = 0;
 
-        function display_tips() {
-            let randInt = Math.floor(Math.random() * text_list.length);
-            tips_display.innerHTML = text_list[randInt];
-        }
+    function display_tips() {
+        let randInt = Math.floor(Math.random() * text_list.length);
+        tips_display.innerHTML = text_list[randInt];
+    }
 
-        setInterval(() => {
-            dots = dots % 7;
+    setInterval(() => {
+        dots = dots % 7;
 
-            result_text.innerHTML = base_text + ".".repeat(dots);
-            dots++;
-        }, 500);
+        result_text.innerHTML = base_text + ".".repeat(dots);
+        dots++;
+    }, 500);
 
-        display_tips();
-        setInterval(display_tips, 5000);
+    display_tips();
+    setInterval(display_tips, 5000);
 
-        window.onload = function() {
-            fetch("/run_model", {method: "POST", 
-                headers: {"Content-Type": "application/json"}, 
-                body: JSON.stringify({
-                    "num_data": num_data,
-                    "nlp_data": nlp_data
-                })
+    window.onload = function() {
+        fetch("/run_model", {method: "POST", 
+            headers: {"Content-Type": "application/json"}, 
+            body: JSON.stringify({
+                "num_data": num_data,
+                "nlp_data": nlp_data
             })
-            .then(response => response.json())
-            .then(data => {
-                location.href = data.redirect;
-            });
-        }
-    </script>
-</body>
-</html>
+        })
+        .then(response => response.json())
+        .then(data => {
+            location.href = data.redirect;
+        });
+    }
+</script>
+{% endblock %}

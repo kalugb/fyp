@@ -1,30 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
-</head>
-<body>
-    <!-- The header and the nav -->
-    <header class="header-container">
-        <h1>Home</h1>
-        <nav>
-            <div class="dropdown">
-                <button class="dropbtn">AAPL ▼</button>
-                <div class="dropdown-content">
-                    <a href="">AAPL</a>
-                    <a href="">Alphabet</a>
-                    <a href="">Stock 3</a>
-                </div>
-            </div>
-            <a href="{{ url_for('admin.admin_login') }}" class="admin-link">Admin Login</a>
-        </nav>
-    </header>
+{% block head_title %}Home{% endblock %}
 
-    <!-- Stock info -->
+{% block admin_link %}<a href="{{ url_for('admin.admin_login') }}" class="admin-link">Admin Login</a> {% endblock %}
+
+{% block content %}
+<!-- Stock info -->
+ <main>
     <div style="margin-bottom: 50px">
         <h2>AAPL Stock Price - By TradingView</h2>
         <!-- TradingView Widget BEGIN -->
@@ -128,76 +110,72 @@
 
         <button class="global-button" type="button" id="scroll-to-top-btn">Back To Top</button>
     </form>
+</main>
 
-    <footer>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const price_myr = document.getElementById("price-myr");
+        const price_usd = document.getElementById("price-usd");
+        const retrieve_btn = document.getElementById("retrieve-data");
+        const scroll_btn = document.getElementById("scroll-to-top-btn")
 
-    </footer>
+        price_myr.addEventListener("input", () => {
+            const myr = parseFloat(price_myr.value);
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const price_myr = document.getElementById("price-myr");
-            const price_usd = document.getElementById("price-usd");
-            const retrieve_btn = document.getElementById("retrieve-data");
-            const scroll_btn = document.getElementById("scroll-to-top-btn")
+            if (isNaN(myr)) { 
+                price_usd.value = ""; 
+                return;
+            }
 
-            price_myr.addEventListener("input", () => {
-                const myr = parseFloat(price_myr.value);
+            const formData = new FormData();
+            formData.append("stockPriceMYR", myr)
 
-                if (isNaN(myr)) { 
-                    price_usd.value = ""; 
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append("stockPriceMYR", myr)
-
-                fetch("/convert_to_usd", {method: "POST", body: formData})
-                .then(response => response.json())
-                .then(results => {
-                    price_usd.value = parseFloat(results.data).toFixed(2)
-                })
+            fetch("/convert_to_usd", {method: "POST", body: formData})
+            .then(response => response.json())
+            .then(results => {
+                price_usd.value = parseFloat(results.data).toFixed(2)
             })
-            
-            price_usd.addEventListener("input", () => {
-                const usd = parseFloat(price_usd.value);
+        })
+        
+        price_usd.addEventListener("input", () => {
+            const usd = parseFloat(price_usd.value);
 
-                if (isNaN(usd)) { 
-                    price_myr.value = ""; 
-                    return;
-                }
+            if (isNaN(usd)) { 
+                price_myr.value = ""; 
+                return;
+            }
 
-                const formData = new FormData()
-                formData.append("stockPriceUSD", usd)
+            const formData = new FormData()
+            formData.append("stockPriceUSD", usd)
 
-                fetch("/convert_to_myr", {method: "POST", body: formData})
-                .then(response => response.json())
-                .then(results => {
-                    price_myr.value = parseFloat(results.data).toFixed(2)
-                })
+            fetch("/convert_to_myr", {method: "POST", body: formData})
+            .then(response => response.json())
+            .then(results => {
+                price_myr.value = parseFloat(results.data).toFixed(2)
             })
+        })
 
-            retrieve_btn.addEventListener("click", () => {
-                const loading_msg = document.getElementById("loading-msg");
-                loading_msg.innerHTML = "Getting latest data...";
+        retrieve_btn.addEventListener("click", () => {
+            const loading_msg = document.getElementById("loading-msg");
+            loading_msg.innerHTML = "Getting latest data...";
 
-                fetch("/retrieve_data", {method: "POST"})
-                .then(response => response.json())
-                .then(results => {
-                    price_usd.value = parseFloat(results.data_usd).toFixed(2);
-                    price_myr.value = parseFloat(results.data_myr).toFixed(2);
-                })
-                .catch(err => console.error(err))
-                .finally(() => {
-                    loading_msg.innerHTML = "";
-                });
+            fetch("/retrieve_data", {method: "POST"})
+            .then(response => response.json())
+            .then(results => {
+                price_usd.value = parseFloat(results.data_usd).toFixed(2);
+                price_myr.value = parseFloat(results.data_myr).toFixed(2);
             })
+            .catch(err => console.error(err))
+            .finally(() => {
+                loading_msg.innerHTML = "";
+            });
+        })
 
-            scroll_btn.addEventListener("click", () => {
-                window.scrollTo({
-                    top: 0,
-                })
+        scroll_btn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
             })
-        });
-    </script>
-</body>
-</html>
+        })
+    });
+</script>
+{% endblock %}

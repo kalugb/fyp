@@ -1,27 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
-</head>
-<body>
-    <header class="header-container">
-        <h1>Title</h1>
-        <nav>
-            <a href="{{ url_for('home') }}" class="admin-link">Main Page</a>
-        </nav>
-    </header>
+{% block head_title%}Admin Login{% endblock %}
 
-    <br>
+{% block admin_link %}<a href="{{ url_for('home') }}" class="admin-link"> Return to Main Page</a>{% endblock %}
 
-    <a href="{{ url_for('home') }}" class="return-home"> << Back to main page</a>
+{% block after_header %}
+<br>
+<a href="{{ url_for('home') }}" class="return-home"> << Back to main page</a>
+<br> <hr>
+{% endblock %}
 
-    <br> <hr>
-
-    <form class="form-container">
+{% block content %}
+<main>
+    <form class="form-container" style="gap: 10px;">
         <h2>Admin Login</h2>
 
         <label for="username" class="label-login">Username: </label> <br>
@@ -37,18 +28,18 @@
         <!-- Clear input  -->
         <button class="global-button" id="clearBtn">Clear Input</button>
     </form>
+</main>
 
-    <script>
-        const clearBtn = document.getElementById("clearBtn");
-        const username_input = document.getElementById("username-input");
-        const password_input = document.getElementById("password-input");
+<script>
+    const clearBtn = document.getElementById("clearBtn");
+    const username_input = document.getElementById("username-input");
+    const password_input = document.getElementById("password-input");
 
-        clearBtn.addEventListener("click", e => {
-            e.preventDefault();
+    clearBtn.addEventListener("click", e => {
+        e.preventDefault();
 
-            username_input.value = "";
-            password_input.value = "";
-        });
-    </script>
-</body>
-</html>
+        username_input.value = "";
+        password_input.value = "";
+    });
+</script>
+{% endblock %}
