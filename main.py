@@ -1,9 +1,11 @@
-import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
+import os
+csv_dir = os.path.join(os.getcwd(), "csv_files")
 
-df = pd.read_csv("csv_files/inference/historical_data.csv", index_col=0)
+df = pd.read_csv(os.path.join(csv_dir, "cleaned", "merged_phrasebank.csv"), index_col=0)
 
-plt.figure(figsize=(16, 12))
-plt.plot(df["Adj Close"][5000:], color="blue", label="Adjusted Closing Price")
-plt.show()
+print(df.columns)
+
+df = df.rename(columns={df.columns[1]: "label"})
+
+print(df, df.columns)

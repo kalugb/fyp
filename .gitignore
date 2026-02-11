@@ -30,5 +30,5 @@ saved_model_params/**/*
 !saved_model_params/pt_files/*.gitkeep
 !saved_model_params/.gitkeep
 
-# Ignore test.html
-website/test.html
+# Ignore test files 
+website/main.py
