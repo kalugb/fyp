@@ -30,23 +30,57 @@
             Test Model
         </button> <br>
 
-        <p id="display-waiting"></p>
+        <p id="display-waiting" style="font-size: 17px"></p>
     </form>
 
     <hr>
 
     <div>
-        <h2>Model Results: </h2>
+        <h2 style="margin-left: 5px;">Model Results: </h2>
 
-        <ul id="num-result"></ul>
-        <ul id="nlp-result"></ul>
+        <p id="before-results" style="font-size: 20px; display: block; margin-left: 5px;">Model result will show here after testing</p>
 
-        <div class="img-text-display">
-            <div class="image-wrapper"> 
-                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}"> 
+        <!-- TODO: design something that makes result lookable -->
+        <div class="result-container">
+            <div class="num-result-container" style="display: none" id="num-result-container">
+                <h3>Numerical Model Test Results</h3>
+                <p>Short Position</p>
+                <ul id="num-short"></ul>
+                <p>Hold Position</p>
+                <ul id="num-hold"></ul>
+                <p>Long Position</p>
+                <ul id="num-long"></ul>
+
+                <p id="accuracy-num-result"></p>
+            
+                <h3>Confusion Matrix for numerical model</h3>
+                <div class="grid-container-num" id="confusion-num"></div>
+            </div>
+
+            
+            <div class="nlp-result-container" style="display: none" id="nlp-result-container">
+                <h3>NLP Model Test Results</h3>
+                <p>Negative Position</p>
+                <ul id="nlp-neg"></ul>
+                <p>Neutral Position</p>
+                <ul id="nlp-neu"></ul>
+                <p>Positive Position</p>
+                <ul id="nlp-pos"></ul>
+
+                <p id="accuracy-nlp-result"></p>
+
+                <h3>Confusion Matrix for NLP</h3>
+                <div class="grid-container-nlp" id="confusion-nlp"></div>
+            </div>
+        </div>
+
+        <!-- Change this to grid friendly style, wrap divs -->
+        <div class="img-text-display-test">
+            <div class="img-wrapper-test"> 
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
                 <p>Text 1</p> 
             </div>
-            <div class="image-wrapper"> 
+            <div class="img-wrapper-test"> 
                 <img src="{{ url_for('static', filename='images/placeholder.jpg') }}"> 
                 <p>Text 2</p>
             </div>
@@ -72,42 +106,160 @@
 </main>
 
 <script>
-    const num_ul = document.getElementById("num-result");
-    const nlp_ul = document.getElementById("nlp-result");
-    const form = document.getElementById("upload-form");
-    const display_waiting = document.getElementById("display-waiting")
+    const num_container = document.getElementById("num-result-container");
+    const nlp_container = document.getElementById("nlp-result-container");
 
-    function appendul(listId, result) {
-        const ul = document.getElementById(listId);
-        
-        result.forEach(value => {
-            const li = document.createElement("li");
-            li.textContent = value;
-            ul.appendChild(li);
-        });
-    }
+    const display_waiting = document.getElementById("display-waiting");
+
+    const confusion_num = document.getElementById("confusion-num");
+    const confusion_nlp = document.getElementById("confusion-nlp");
+
+    const form = document.getElementById("upload-form");
+
+    const num_short = document.getElementById("num-short");
+    const num_hold = document.getElementById("num-hold");
+    const num_long = document.getElementById("num-long");
+
+    const nlp_neg = document.getElementById("nlp-neg");
+    const nlp_neu = document.getElementById("nlp-neu");
+    const nlp_pos = document.getElementById("nlp-pos");
+
+    const accuracy_num_result = document.getElementById("accuracy-num-result");
+    const accuracy_nlp_result = document.getElementById("accuracy-nlp-result");
+
+    let num_model_tested = false;
+    let nlp_model_tested = false;
+    let num_dict, nlp_dict, num_conf_matrix, nlp_conf_matrix;
 
     form.addEventListener("submit", e => {
         e.preventDefault();
-        display_waiting.innerHTML = "Model testing, this will take a while. Please wait... (Estimated 15 seconds)"
-        num_ul.innerHTML = "";
-        nlp_ul.innerHTML = "";
+        num_container.style.display = "none";
+        nlp_container.style.display = "none";
+
+        num_short.innerHTML = "";
+        num_hold.innerHTML = "";
+        num_long.innerHTML = "";
+
+        nlp_neg.innerHTML = "";
+        nlp_neu.innerHTML = ""; 
+        nlp_pos.innerHTML = "";
+
+        confusion_num.innerHTML = "" ;
+        confusion_nlp.innerHTML = "";
+
+        base_text = "(Estimated 45 seconds) Model testing, this will take a while. " +
+            "Do not refresh the page. Please wait";
 
         const formData = new FormData(form);
+
+        let dots = 0;
+        const interval = setInterval(() => {
+            dots = dots % 7;
+
+            display_waiting.innerHTML = base_text + ".".repeat(dots);
+            dots++;
+        }, 500);
     
         fetch("/upload_files", {method: "POST", body: formData})
         .then(response => response.json())
         .then(res => {
-            if (res.error) {
-                alert(res.error);
-                display_waiting.innerHTML = "Please upload at least one file in one of the field"
-                return;
+            clearInterval(interval)
+            num_dict = res.num_dict
+            nlp_dict = res.nlp_dict
+            num_conf_matrix = res.num_conf_matrix
+            nlp_conf_matrix = res.nlp_conf_matrix
+            num_model_tested = res.num_model_tested
+            nlp_model_tested = res.nlp_model_tested
+            accuracy_num = res.accuracy_num
+            accuracy_nlp = res.accuracy_nlp
+            total_time = res.total_time
+
+            if (num_model_tested) { 
+                num_container.style.display = "grid";
+
+                accuracy_num_result.innerHTML = "Overall Accuracy: " + accuracy_num.toFixed(2);
+
+                const num_class_name = ["Short", "Hold", "Long"];
+                const num_values = Object.values(num_dict);
+
+                for (let i = 0; i < num_class_name.length; i++) {
+                    const current_class = num_class_name[i];
+                    Object.entries(num_values[i]).forEach(([metric, value]) => {
+                        const li = document.createElement("li");
+                        li.textContent = metric + ": " + value.toFixed(2);
+
+                        if (current_class == "Short") {
+                            num_short.appendChild(li);
+                        }
+                        else if (current_class == "Hold") {
+                            num_hold.appendChild(li);
+                        }
+                        else {
+                            num_long.appendChild(li);
+                        }
+                    })
+                }
+
+                for (let i = 0; i < num_conf_matrix.length; i++) {
+                    scoring = num_conf_matrix[i];
+                    for (let j = 0; j < scoring.length; j++) {
+                        const box = document.createElement("div");
+                        box.className = "box";
+                        box.textContent = scoring[j];
+                        confusion_num.appendChild(box);
+                    }
+                }
             }
 
-            appendul("num-result", [res.num_precision, res.num_recall, res.num_f1]);
-            appendul("nlp-result", [res.nlp_precision, res.nlp_recall, res.nlp_f1]);
-            display_waiting.innerHTML = "Model testing completed"
-        });
+            if (nlp_model_tested) {
+                nlp_container.style.display = "grid";
+
+                accuracy_nlp_result.innerHTML = "Overall Accuracy: " + accuracy_nlp.toFixed(2);
+
+                const nlp_class_name = ["Negative", "Neutral", "Positive"];
+                const nlp_values = Object.values(nlp_dict);
+
+                for (let i = 0; i < nlp_class_name.length; i++) {
+                    const current_class = nlp_class_name[i];
+                    Object.entries(nlp_values[i]).forEach(([metric, value]) => {
+                        const li = document.createElement("li");
+                        li.textContent = metric + ": " + value.toFixed(2);
+
+                        if (current_class == "Negative") {
+                            nlp_neg.appendChild(li);
+                        }
+                        else if (current_class == "Neutral") {
+                            nlp_neu.appendChild(li);
+                        }
+                        else {
+                            nlp_pos.appendChild(li);
+                        }
+                    })
+                }
+
+                for (let i = 0; i < nlp_conf_matrix.length; i++) {
+                    scoring = nlp_conf_matrix[i];
+                    for (let j = 0; j < scoring.length; j++) {
+                        const box = document.createElement("div");
+                        box.className = "box";
+                        box.textContent = scoring[j];
+                        confusion_nlp.appendChild(box);
+                    }
+                }
+            }
+
+            if (!num_model_tested && !nlp_model_tested) {
+                num_container.style.display = "none";
+                nlp_container.style.display = "none";
+
+                display_waiting.innerHTML = "Please upload files first before testing...";
+            } else {
+                document.getElementById("before-results").style.display = "none";
+                display_waiting.innerHTML = "Model testing completed (Total time taken: " + total_time.toFixed(2) + " seconds)";
+            }
+        })
     });
 </script>
 {% endblock %}
+
+{% block admin_mode %}<p style="color: red;"><b>Currently in Admin Mode</b></p>{% endblock %}

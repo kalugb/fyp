@@ -70,13 +70,13 @@
         "Backtesting helps validate a trading strategy."
     ];
 
-    let dots = 0;
-
+    
     function display_tips() {
         let randInt = Math.floor(Math.random() * text_list.length);
         tips_display.innerHTML = text_list[randInt];
     }
-
+    
+    let dots = 0;
     setInterval(() => {
         dots = dots % 7;
 

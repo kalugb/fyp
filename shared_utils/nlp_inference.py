@@ -108,10 +108,9 @@ def test_nlp_model(df, threshold_tuned=True, tune_class=0, fallback_class=1, unt
     y_pred = y_pred if threshold_tuned else torch.cat(y_pred).numpy()
     y_true = y_true if threshold_tuned else torch.cat(y_true).numpy()
     
-    report = classification_report(y_true, y_pred)
     confusion = confusion_matrix(y_true, y_pred)
     
-    return report, confusion
+    return confusion
        
 if __name__ == "__main__": 
     # print(predict_sentiment("Intel stock plunges as hopes for a 'clean' turnaround story meet reality"))
@@ -122,9 +121,8 @@ if __name__ == "__main__":
     df = pd.read_csv(os.path.join(csv_dir, "raw", "enhanced_phrasebank.csv"), index_col=0)
     
     r, c = test_nlp_model(df, threshold_tuned=False)
-    print(r)
-    print(c)
-    
+    print(r, c)
+    print(type(r), type(c))    
     
     
     

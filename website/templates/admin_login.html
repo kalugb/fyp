@@ -12,17 +12,16 @@
 
 {% block content %}
 <main>
-    <form class="form-container" style="gap: 10px;">
+    <form class="form-container" style="gap: 10px;" action="{{ url_for('admin.admin_login') }}" method="POST">
         <h2>Admin Login</h2>
 
         <label for="username" class="label-login">Username: </label> <br>
-        <input type="text" placeholder="Username" class="input-login" id="username-input"> <br>
+        <input type="text" placeholder="Username" class="input-login" id="username-input" name="username"> <br>
 
         <label for="password" class="label-login">Password: </label> <br>
-        <input type="password" placeholder="Password" class="input-login" id="password-input"> <br>
+        <input type="password" placeholder="Password" class="input-login" id="password-input" name="password"> <br>
 
-        <button class="global-button" style="margin-right: 100px;" 
-                onclick="window.location = '{{ url_for('admin.admin_page') }}'" type="button">
+        <button class="global-button" style="margin-right: 100px;" type="submit">
             Sign In
         </button>
         <!-- Clear input  -->
@@ -34,6 +33,7 @@
     const clearBtn = document.getElementById("clearBtn");
     const username_input = document.getElementById("username-input");
     const password_input = document.getElementById("password-input");
+    const error = {{ get_flashed_messages() | tojson }};
 
     clearBtn.addEventListener("click", e => {
         e.preventDefault();
@@ -41,5 +41,11 @@
         username_input.value = "";
         password_input.value = "";
     });
+
+    window.onload = function() {
+        if (error.length > 0) {
+            alert(error.join("\n"));
+        }
+    };
 </script>
 {% endblock %}

@@ -53,10 +53,9 @@ def test_num_model(df, perform_mean_reversion=True):
     y = df["position"]
     output_list = model.predict(X)
     
-    report = classification_report(y, output_list)
     confusion = confusion_matrix(y, output_list)
     
-    return report, confusion
+    return confusion
     
 # placeholder, just for testing model
 if __name__ == "__main__":  
@@ -64,9 +63,10 @@ if __name__ == "__main__":
     import pandas as pd
     df_dir = os.path.join(os.getcwd(), "csv_files", "raw", "historical_stock_data.csv")
     df = pd.read_csv(df_dir, index_col=0)
-    
+
     r, c = test_num_model(df)
     
     print(r, c)
+    print(type(r), type(c))
 
 
