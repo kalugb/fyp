@@ -328,26 +328,22 @@ footer p {
     aspect-ratio: 1 / 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center;    
     border: 2px solid black;
 }
-.img-text-display-test {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 10px;
-}
 /* TODO: Change to grid */
-.img-wrapper-test {
-    margin-top: 10px;
-    flex: 1;
+.model-test-img-container {
+    display: grid;
+    grid-template-columns: repeat(3, 2fr);
+    grid-template-rows: auto;
+}
+.model-test-img-container img {
+    width: 100%;
+    height: auto;
+}
+.model-img-text-box {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-}
-.img-wrapper-test img {
-    width: 100%;
-    object-fit: fill;
-    height: auto;
-    max-height: 75%;
 }

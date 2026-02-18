@@ -16,7 +16,7 @@
 
     <form action="{{ url_for('admin.upload_files') }}" class="form-model_testing", 
         method="post" enctype="multipart/form-data" id="upload-form">
-        <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
+        <img src="static/images/placeholder.jpg">
 
         <label for="upload numerical dataset" class="global-label">Upload new numerical dataset features (in .csv format): </label> <br>
         <label for="instruction">(Instructions)</label> <br> 
@@ -74,15 +74,41 @@
             </div>
         </div>
 
-        <!-- Change this to grid friendly style, wrap divs -->
-        <div class="img-text-display-test">
-            <div class="img-wrapper-test"> 
-                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
-                <p>Text 1</p> 
+        <div id="num-model-test-img-container" style="display: none">
+            <hr>
+            <h3>Numerical Model Test Graphs</h3>
+            <div class="model-test-img-container">
+                <div class="model-img-text-box">
+                    <img src="static/images/placeholder.jpg" id="prc-curve-num">
+                    <p>Precision-Recall Curve</p>
+                </div>
+                <div class="model-img-text-box">
+                    <img src="static/images/placeholder.jpg" id="roc-curve-num">
+                    <p>Receiver Operating Characteristic Curve (With Area Under Curve Value)</p>
+                </div>
+                <div class="model-img-text-box">
+                    <img src="static/images/placeholder.jpg" id="learning-curve">
+                    <p>Learning Curve</p>
+                </div>
             </div>
-            <div class="img-wrapper-test"> 
-                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}"> 
-                <p>Text 2</p>
+        </div>
+
+        <div id="nlp-model-test-img-container" style="display: none">
+            <hr>
+            <h3>NLP Model Test Graphs</h3>
+            <div class="model-test-img-container">
+                <div class="model-img-text-box">
+                    <img src="static/images/placeholder.jpg" id="prc-curve-nlp">
+                    <p>Precision Recall Curve</p>
+                </div>
+                <div class="model-img-text-box">
+                    <img src="static/images/placeholder.jpg" id="roc-curve-nlp">
+                    <p>Receiver Operating Characteristic Curve (With Area Under Curve Value)</p>
+                </div>
+                <div class="model-img-text-box">
+                    <img src="static/images/placeholder.jpg" id="threshold-tuning-0-1">
+                    <p>Scoring at various threshold (Negative / Neutral)</p>
+                </div>
             </div>
         </div>
     </div>
@@ -127,6 +153,9 @@
     const accuracy_num_result = document.getElementById("accuracy-num-result");
     const accuracy_nlp_result = document.getElementById("accuracy-nlp-result");
 
+    const num_img_container = document.getElementById("num-model-test-img-container")
+    const nlp_img_container = document.getElementById("nlp-model-test-img-container")
+
     let num_model_tested = false;
     let nlp_model_tested = false;
     let num_dict, nlp_dict, num_conf_matrix, nlp_conf_matrix;
@@ -135,6 +164,8 @@
         e.preventDefault();
         num_container.style.display = "none";
         nlp_container.style.display = "none";
+        num_img_container.style.display = "none";
+        nlp_img_container.style.display = "none";
 
         num_short.innerHTML = "";
         num_hold.innerHTML = "";
@@ -176,6 +207,7 @@
 
             if (num_model_tested) { 
                 num_container.style.display = "grid";
+                num_img_container.style.display = "inline-block";
 
                 accuracy_num_result.innerHTML = "Overall Accuracy: " + accuracy_num.toFixed(2);
 
@@ -209,10 +241,19 @@
                         confusion_num.appendChild(box);
                     }
                 }
+
+                const prc_curve_num = document.getElementById("prc-curve-num");
+                const roc_curve_num = document.getElementById("roc-curve-num");
+                const learning_curve = document.getElementById("learning-curve");
+
+                prc_curve_num.src = "/static/images/model_testing_num/prc_curve.jpg";
+                roc_curve_num.src = "/static/images/model_testing_num/roc_curve.jpg";
+                learning_curve.src = "/static/images/model_testing_num/learning_curve.jpg";
             }
 
             if (nlp_model_tested) {
                 nlp_container.style.display = "grid";
+                nlp_img_container.style.display = "inline-block";
 
                 accuracy_nlp_result.innerHTML = "Overall Accuracy: " + accuracy_nlp.toFixed(2);
 
@@ -246,6 +287,14 @@
                         confusion_nlp.appendChild(box);
                     }
                 }
+
+                const prc_curve_nlp = document.getElementById("prc-curve-nlp")
+                const roc_curve_nlp = document.getElementById("roc-curve-nlp")
+                const threshold_tuning = document.getElementById("threshold-tuning-0-1")
+
+                prc_curve_nlp.src = "/static/images/model_testing_nlp/prc_curve.jpg"
+                roc_curve_nlp.src = "/static/images/model_testing_nlp/roc_curve.jpg"
+                threshold_tuning.src = "/static/images/model_testing_nlp/threshold_tuning_class0_class1.jpg"
             }
 
             if (!num_model_tested && !nlp_model_tested) {
