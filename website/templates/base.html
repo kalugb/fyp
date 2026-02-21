@@ -8,20 +8,85 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
 </head>
 <body>
-    <header class="header-container">
-        <h1>{% block head_title %}Home{% endblock %}</h1>
-        <nav>
-            <div class="dropdown">
-                <button class="dropbtn">AAPL ▼</button>
-                <div class="dropdown-content">
-                    <a href="">AAPL</a>
-                    <a href="">Alphabet</a>
-                    <a href="">Stock 3</a>
-                </div>
+    <nav class="admin-mode-display" style="{% if not admin_mode %} display: none; {% endif %}">
+        <p>You are in <b style="color: red;">admin mode</b></p>
+    </nav>
+
+    {% if logout %}
+    <nav class="logout-msg" id="logout-msg">
+        You have been successfully logged out. Back to User mode
+    </nav>
+    <script>
+        window.onload = function() {
+            const header = document.querySelector(".header-container");
+            header.style.marginTop = "30px";
+
+            window.scrollTo({top: 0, behavior: 'smooth'});
+
+            setTimeout(() => {
+                const msg = document.getElementById("logout-msg");
+                
+                msg.style.opacity = "0";
+                msg.style.transform = "translateY(-10px)";
+                
+                setTimeout(() => {
+                    msg.remove();
+                    header.style.marginTop = "0px";
+                }, 600);
+            }, 3000);
+        }
+    </script>
+    {% endif %}
+
+    <header class="header-container" style="{% if not admin_mode %} margin-top: 0px; {% endif %}">
+        <h1>Stock Market Analysis</h1>
+        <nav class="top-nav-bar">
+            <div>
+                <a href="{{ url_for('home') }}" class="logo"><h1>Logo</h1></a>
             </div>
-            {% block admin_link %}
-            <a href="{{ url_for('admin.admin_login') }}" class="admin-link">Admin Login</a> 
-            {% endblock %}
+            <div class="nav-links">
+                <div>
+                    <a href="#" class="admin-link">About Us</a>
+                </div>
+                {% block main_page %}
+                <div class="nav-lists">
+                    <a href="{{ url_for('home') }}" class="admin-link">Main Page</a>
+                </div>
+                {% endblock %}
+                {% if admin_mode %}
+                <div>
+                    <a href="{{ url_for('admin.admin_logout') }}" class="admin-link">Logout</a>
+                </div>
+                <div class="dropdown">
+                    <div class="select">
+                        {% block admin_page_name %}
+                        <span class="selected">Admin</span>
+                        {% endblock %}
+                        <div class="caret"></div>
+                    </div>
+                    <ul class="menu">
+                        {% block at_admin_page %}
+                        <a href="{{ url_for('admin.admin_page') }}"><li>Go to Admin Page</li></a>
+                        {% endblock %}
+                        {% block at_numerical_model %}
+                        <a href="{{ url_for('admin.numerical_model') }}"><li>Go to Numerical Model</li></a>
+                        {% endblock %}
+                        {% block at_nlp_model %}
+                        <a href="{{ url_for('admin.nlp_model') }}"><li>Go to NLP Model</li></a>
+                        {% endblock %}
+                        {% block at_model_testing %}
+                        <a href="{{ url_for('admin.model_testing') }}"><li>Go to Model Testing</li></a>
+                        {% endblock %}
+                    </ul>
+                </div>
+                {% else %}
+                    {% block admin_link %}
+                    <div>
+                        <a href="{{ url_for('admin.admin_login') }}" class="admin-link">Admin Login</a> 
+                    </div>
+                    {% endblock %}
+                {% endif %}
+            </div>
         </nav>
     </header>
 
@@ -32,8 +97,44 @@
 
     <footer>
         <p>Stock Market Analysis&copy; | Daniel Yong</p>
-        <p>Contact: 0123456789</p>
-        {% block admin_mode %}{% endblock %}
+        <p>Contact: 0123456789 | <a href="#">About Us</a></p>
+        {% if admin_mode %}
+        <p style="color: red;"><b>Currently in Admin Mode</b></p>
+        {% endif %}
     </footer>
+
+    <script>
+        const dropdown = document.querySelectorAll('.dropdown');
+        
+        dropdown.forEach(dropdown => {
+            const select = dropdown.querySelector(".select");
+            const caret = dropdown.querySelector(".caret");
+            const menu = dropdown.querySelector(".menu");
+            const options = dropdown.querySelectorAll(".menu li");
+            const selected = dropdown.querySelector(".selected");
+            
+            select.addEventListener("click", () => {
+                select.classList.toggle("select-clicked");
+                caret.classList.toggle("caret-rotate");
+                menu.classList.toggle("menu-open");
+            });
+
+            options.forEach(option => {
+                option.addEventListener("click", () => {
+                    selected.innerText = option.innerText;
+
+                    select.classList.remove("select-clicked");
+                    caret.classList.remove("caret-rotate");
+                    menu.classList.remove("menu-open");
+                    
+                    options.forEach(option => {
+                        option.classList.remove("active");
+                    })
+
+                    option.classList.add("active");
+                });
+            });
+        });
+    </script>
 </body>
 </html>

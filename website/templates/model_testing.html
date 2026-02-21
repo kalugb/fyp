@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
-{% block head_title%}Model Testing{% endblock %}
+{% block admin_page_name%}
+<span class="selected">Model Testing</span>
+{% endblock %}
 
-{% block admin_link %}<a href="{{ url_for('home') }}" class="admin-link"> Return to Main Page</a>{% endblock %}
+{% block at_model_testing %}{% endblock %}
 
 {% block after_header %}
 <br>
@@ -16,8 +18,6 @@
 
     <form action="{{ url_for('admin.upload_files') }}" class="form-model_testing", 
         method="post" enctype="multipart/form-data" id="upload-form">
-        <img src="static/images/placeholder.jpg">
-
         <label for="upload numerical dataset" class="global-label">Upload new numerical dataset features (in .csv format): </label> <br>
         <label for="instruction">(Instructions)</label> <br> 
         <input type="file" accept=".csv" name="file_num"> <br> <br> <br>
@@ -310,5 +310,3 @@
     });
 </script>
 {% endblock %}
-
-{% block admin_mode %}<p style="color: red;"><b>Currently in Admin Mode</b></p>{% endblock %}

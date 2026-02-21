@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
-{% block head_title %}Home{% endblock %}
-
-{% block admin_link %}<a href="{{ url_for('admin.admin_login') }}" class="admin-link">Admin Login</a> {% endblock %}
+{% block main_page %}{% endblock %}
 
 {% block content %}
 <!-- Stock info -->
@@ -108,7 +106,9 @@
             </strong> <br> <br>
         </div>
 
-        <button class="global-button" type="button" id="scroll-to-top-btn">Back To Top</button>
+        <button class="floating-btn" type="button" id="scroll-to-top-btn">
+            &uarr;
+        </button>
     </form>
 </main>
 
@@ -176,6 +176,20 @@
                 top: 0,
             })
         })
+
+        window.addEventListener("scroll", () => {
+            const scrollY = window.scrollY || window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight;
+            const winHeight = window.innerHeight;
+
+            const scrollPercentage = (scrollY / (docHeight - winHeight)) * 100;
+            
+            if (scrollPercentage > 50) {
+                scroll_btn.classList.add("show");
+            } else {
+                scroll_btn.classList.remove("show");
+            }
+        });
     });
 </script>
 {% endblock %}

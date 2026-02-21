@@ -20,10 +20,16 @@ app.secret_key = generate_session_key()
 # get current conversion rate
 conversion_rate = get_exchange_rate()
 
+@app.context_processor
+def inject_admin_mode():
+    admin_mode = session.get("admin_mode", False)
+    return dict(admin_mode=admin_mode)
+
 # main_page.html
 @app.route("/")
 def home():
-    return render_template("main_page.html", name="Main Page", conversion_rate=f"{conversion_rate:.2f}")
+    logout = session.pop("logout", False)
+    return render_template("main_page.html", name="Main Page", conversion_rate=f"{conversion_rate:.2f}", logout=logout)
 
 # retrieve latest closing price
 @app.route("/retrieve_data", methods=["POST"])
@@ -179,7 +185,7 @@ def result():
                            overall_result=overall_result)
     
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=True)
     
     
     

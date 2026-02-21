@@ -8,6 +8,11 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 admin_app = Blueprint("admin", __name__)
 
+@admin_app.before_request
+def set_admin_mode_default():
+    if "admin" not in session:
+        session["admin_mode"] = False
+        
 # Logic for admin page will be added later
 @admin_app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
@@ -16,9 +21,17 @@ def admin_login():
     
     if request.method == "POST":
         session["admin"] = "admin_name" # will get the admin name later
+        session["admin_mode"] = True
         return redirect(url_for("admin.admin_page"))
         
     return render_template("admin_login.html")
+
+@admin_app.route("/admin_logout")
+def admin_logout():
+    session.pop("admin", None)
+    session.pop("admin_mode", None)
+    session["logout"] = True
+    return redirect(url_for("home"))
 
 @admin_app.route("/admin_page")
 def admin_page():
