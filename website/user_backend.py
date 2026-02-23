@@ -8,9 +8,20 @@ from website.backend_functions import update_dataset, generate_session_key, get_
 from admin_backend import admin_app
 from download_backend import download_app
 
-df_inference_path = os.path.join(os.getcwd(), "csv_files", "inference", "historical_data.csv")
-raw_df = pd.read_csv(df_inference_path, index_col="Date", parse_dates=True)
+from shared_utils.load_utils import load_raw_df
+
+raw_df, df_inference_path = load_raw_df()
 raw_df = update_dataset(df_inference_path)
+
+# get latest closing price (by default AAPL)
+latest_closing_price = raw_df.iloc[-1, :-1]["Adj Close"].tolist()
+last_closing_price = raw_df.iloc[-2, :-1]["Adj Close"].tolist()
+closing_price_diff = latest_closing_price - last_closing_price
+diff_percentage = round((closing_price_diff / last_closing_price) * 100, 2)
+if closing_price_diff > 0:
+    display_color = "green"
+else:
+    display_color = "red"
 
 app = Flask(__name__)
 app.register_blueprint(admin_app)
@@ -23,20 +34,37 @@ conversion_rate = get_exchange_rate()
 @app.context_processor
 def inject_admin_mode():
     admin_mode = session.get("admin_mode", False)
-    return dict(admin_mode=admin_mode)
+    stock_active = session.get("stock_active", "AAPL")
+    return dict(admin_mode=admin_mode, stock_active=stock_active)
 
 # main_page.html
 @app.route("/")
 def home():
     logout = session.pop("logout", False)
-    return render_template("main_page.html", name="Main Page", conversion_rate=f"{conversion_rate:.2f}", logout=logout)
+    return render_template("main_page.html", name="Main Page", conversion_rate=conversion_rate, 
+                           logout=logout, latest_closing_price=latest_closing_price, 
+                           display_color=display_color, closing_price_diff=closing_price_diff,
+                           diff_percentage=diff_percentage)
+    
+# TODO: Change this
+@app.route("/get_stock_data/<symbol>")
+def get_stock_data(symbol):
+    stock_data = symbol
+    session["stock_active"] = symbol
+    
+    return {
+        "symbol": symbol,
+        "price": symbol,
+        "change": symbol,
+        "test": session["stock_active"]
+    }
 
 # retrieve latest closing price
+# TODO: Fix this after setting session
 @app.route("/retrieve_data", methods=["POST"])
 def retrieve_data():
     data = raw_df.iloc[-1, :-1]
 
-    # data = np.array([adj close]), so that's why the below 
     closing_price_usd = data["Adj Close"]
     closing_price_myr = closing_price_usd * conversion_rate
 
@@ -185,7 +213,6 @@ def result():
                            overall_result=overall_result)
     
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True)
-    
+    app.run(debug=True, use_reloader=False)
     
     

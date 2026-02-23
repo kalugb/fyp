@@ -1,17 +1,14 @@
 {% extends "base.html" %}
 
-{% block head_title%}Admin Login{% endblock %}
-
 {% block admin_link %}{% endblock %}
-
-{% block after_header %}
-<br>
-<a href="{{ url_for('home') }}" class="return-home"> << Back to main page</a>
-<br> <hr>
-{% endblock %}
 
 {% block content %}
 <main>
+    <h1 style="margin-left: 5px;">Admin Login</h1>
+    <br>
+    <a href="{{ url_for('home') }}" class="return-home"> << Back to main page</a>
+    <br> <hr>
+    
     <form class="form-container" style="gap: 10px;" action="{{ url_for('admin.admin_login') }}" method="POST">
         <h2>Admin Login</h2>
 

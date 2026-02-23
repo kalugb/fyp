@@ -82,8 +82,21 @@ def backtesting(y_pred, X_test):
     print(f"Total Frequency: {total_frequency:.4f}, Long: {long_frequency:.4f}, Short: {short_frequency:.4f}")
     print(f"Sharpe ratio: {sharpe:.4f}, Annualized (using 252 trading days): {ann_sharpe:.4f}")
     print(f"Win rate: {win_rate:.4f}, with total trades performed: {total_trades}")
+    
+    backtesting_results = {
+        "Expected Daily Profit & Loss": expected_daily_pnl,
+        "Total Frequency": total_frequency,
+        "Long Frequency": long_frequency,
+        "Short Frequency": short_frequency,
+        "Sharpe Ratio": sharpe,
+        "Annual Sharpe Ratio (252 trading days)": ann_sharpe,
+        "Win Rate": win_rate,
+        "Total Trades Performed": total_trades
+    }
+    
+    return backtesting_results
 
-def save_model(params: dict):
+def save_model(params: dict, backtesting: dict, confusion: dict):
     print("Model saving now...")
     model_save_path = os.path.join(saved_param_dir, "lr_model.joblib")
     dump(grid.best_estimator_, model_save_path)
@@ -92,12 +105,16 @@ def save_model(params: dict):
     params.update({"class_weight": class_weight})
     
     config = {
-        "model name": "Logistic Regression",
+        "model_name": "Logistic Regression",
         "labels": 3,
         
         "params": params,
         
-        "random_state": 67
+        "backtesting_result": backtesting,
+        
+        "confusion_matrix": confusion,
+        
+        "random_state": 67,
     }
     
     config_path = os.path.join(saved_param_dir, "json_files", "num_config.json")
@@ -115,11 +132,11 @@ print(confusion)
 best_params = grid.best_params_
 best_params.update({"class_weight": class_weight})
 
-backtesting(y_pred, X_test)
+backtesting_results = backtesting(y_pred, X_test)
 
 save = str(input("Save model? (y/n): "))
 
 if save.lower().strip() == "y":
-    save_model(best_params)
+    save_model(best_params, backtesting_results, confusion.tolist())
 else:
     print("Model is not saved. Previous saved params and models are untouched")

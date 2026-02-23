@@ -6,6 +6,8 @@
     --header-nav-font-size: 18px;
     --nav-color: #81bdef;
     --nav-color-list-hover: #0d47a1;
+    --nav-height: 80px;
+    --admin-display-height: 60px;
 }
 
 html {
@@ -45,7 +47,7 @@ footer p {
 .header-container {
     margin-left: -10px;
     margin-right: -10px;
-    margin-top: 50px;
+    margin-top: calc(var(--nav-height) + var(--admin-display-height));
 }
 .header-container > h1 {
     margin-left: 10px;
@@ -57,6 +59,14 @@ footer p {
     align-items: center;
     gap: 250px;
     background-color: var(--nav-color);
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
+    z-index: 1000;
+    margin-bottom: 50px;
 }
 .top-nav-bar > h1 {
     margin-left: auto;
@@ -84,7 +94,7 @@ footer p {
 /* Logout alert message styling */
 .logout-msg {
     position: fixed;
-    top: 0px;
+    top: 80px;
     left: 0px;
     width: 100%;
     z-index: 1000;
@@ -101,7 +111,7 @@ footer p {
 }
 /* admin mode display styling */
 .admin-mode-display {
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -110,9 +120,10 @@ footer p {
     border-top: 0.5px solid lightgrey;
 
     position: fixed;
-    top: 0;
+    top: 80px;
+    height: var(--admin-display-height);
     left: 0;
-    z-index: 1000;
+    z-index: 100;
 }
 /* Dropdown styling (don't touch this) */
 .dropdown {
@@ -289,6 +300,42 @@ footer p {
 .global-select:hover{
     cursor: pointer;
 }
+.stock-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+.stock-info-container div:nth-child(1) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+.stock-list { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex: 1;
+    margin-top: 20px;
+}
+.stock-link {
+    text-decoration: none;
+    color: black;
+    font-size: var(--header-nav-font-size);
+    white-space: nowrap;
+}
+.stock-active {
+    font-size: calc(var(--header-nav-font-size) + 5px);
+    color: blue;
+}
+.stock-link:not(.stock-active):hover {
+    cursor: pointer;
+    font-size: calc(var(--header-nav-font-size) + 2px);
+}
 
 /*Styling for admin_login.html*/
 .return-home {
@@ -383,17 +430,56 @@ footer p {
 }
 
 /* Styling for numerical_model.html and nlp_model.html*/
+.numerical-parameter-info {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 20px;
+    margin-left: 5px;
+}
+.numerical-scoring-info, .nlp-scoring-info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 20px;
+    gap: 50px;
+    margin-left: 5px;
+}
+.nlp-parameter-info {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 20px;
+    margin-left: 5px;
+    gap: 50px;
+}
+.num-confusion, .nlp-confusion {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+.num-confusion div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid black;
+}
+.nlp-confusion div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid black;
+}
+
 /* Reused in nlp_model.html, model_testing.html */
 .img-text-display {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, auto);
+    grid-template-columns: repeat(3, 1fr);
     padding: 10px;
-    gap: 10px 20px;
+    gap: 10px;
 }
 .image-wrapper img {
     width: 100%;
-    height: 300px;
+    height: 400px;
     align-items: center;
     display: block;
     margin: auto;

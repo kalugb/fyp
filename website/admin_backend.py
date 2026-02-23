@@ -49,17 +49,96 @@ def model_testing():
 
 @admin_app.route("/nlp_model")
 def nlp_model():
+    import numpy as np
     if "admin" not in session:
         flash("Please log in to admin account first")
         return redirect(url_for("admin.admin_login"))
-    return render_template("nlp_model.html")
+    
+    from shared_utils.load_utils import load_nlp_config
+    
+    data = load_nlp_config()
+    
+    model_name = data["model_name"]
+    loss = data["loss_list"]
+    loss_params = {"Loss Type": loss["type"], "Gamma": loss["gamma"], "Reduction Type": loss["reduction_type"], "Weights": loss["weights"]}
+    params_list = data["hyperparameters_list"]
+    params = {
+        "Batch Size": params_list["batch_size"],
+        "Learning Rate": params_list["lr"],
+        "Weight Decay": params_list["weight_decay"],
+        "Total Epochs": params_list["epochs"],
+        "Threshold": f"{params_list["threshold_0"]:.4f}",
+    }
+    confusion = np.array(data["confusion_matrix"])
+    metrics = {}
+    
+    for i in range(3):
+        TP = confusion[i][i]
+        FP = confusion[:, i].sum() - TP
+        FN = confusion[i, :].sum() - TP        
+        
+        precision = TP / (TP + FP)
+        recall = TP / (TP + FN)
+        f1 = 2 * (precision * recall) / (precision + recall)
+        
+        metrics[f"class_{i - 1}"] = {
+            "Precision": precision.item(),
+            "Recall": recall.item(),
+            "F1": f1.item()
+        }
+        
+    accuracy = confusion.trace() / confusion.sum()
+    metrics["accuracy"] = accuracy
+    
+    return render_template("nlp_model.html", model_name=model_name, loss_params=loss_params, 
+                           params=params, metrics=metrics, accuracy=accuracy, confusion=confusion)
 
 @admin_app.route("/numerical_model")
 def numerical_model():
+    import numpy as np
     if "admin" not in session:
         flash("Please log in to admin account first")
         return redirect(url_for("admin.admin_login"))
-    return render_template("numerical_model.html")
+    
+    from shared_utils.load_utils import load_num_config
+
+    data = load_num_config()
+    
+    num_model_name = data["model_name"]
+    params = data["params"]
+    C = params["lr__C"]
+    max_iter = params["lr__max_iter"]
+    class_weight = params["class_weight"]
+    labelled_class_weight = {
+        "Short": class_weight["-1"],
+        "Hold": class_weight["0"],
+        "Long": class_weight["1"]
+    }
+    confusion = np.array(data["confusion_matrix"])
+    backtest_result = data["backtesting_result"]
+    metrics = {}
+    
+    for i in range(3):
+        TP = confusion[i][i]
+        FP = confusion[:, i].sum() - TP
+        FN = confusion[i, :].sum() - TP        
+        
+        precision = TP / (TP + FP)
+        recall = TP / (TP + FN)
+        f1 = 2 * (precision * recall) / (precision + recall)
+        
+        metrics[f"class_{i - 1}"] = {
+            "Precision": precision.item(),
+            "Recall": recall.item(),
+            "F1": f1.item()
+        }
+        
+    accuracy = confusion.trace() / confusion.sum()
+    metrics["accuracy"] = accuracy
+    
+    return render_template("numerical_model.html", model_name=num_model_name, 
+                           C=C, max_iter=max_iter, class_weight=labelled_class_weight,
+                           metrics=metrics, backtest_result=backtest_result, confusion=confusion)
 
 # file handling
 @admin_app.route("/upload_files", methods=["POST"])

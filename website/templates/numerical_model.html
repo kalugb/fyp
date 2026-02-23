@@ -14,36 +14,88 @@
 
 {% block content %}
 <main>
+    <h3 style="margin: 5px; font-size: 25px">Parameter used by model</h3>
     <div class="numerical-parameter-info">
-        <h3>Parameter used by model</h3>
-
         <ul class="numerical-parameter-list">
-            <li>Parameter 1</li>
-            <li>Parameter 2</li>
-            <li>Parameter 3</li>
-            <li>Parameter 4</li>
+            <li>Model used: {{ model_name }}</li>
+            <li>C: {{ C }}</li>
+            <li>Max Iteration (max_iter): {{ max_iter }}</li>
+            <li>Class Weight: {{ class_weight }}</li>
         </ul>
     </div>
 
-    <div class="numerical-scoring-info">
-        <h3>Scoring: </h3>
+    <hr>
 
-        <ul class="numerical-scoring-list">
-            <li>Scoring 1</li>
-            <li>Scoring 2</li>
-            <li>Scoring 3</li>
+    <h3 style="margin: 5px; font-size: 25px">Scoring: </h3>
+    <div class="numerical-scoring-info">
+        <div>
+            <h3>Short</h3>
+            <ul class="numerical-scoring-list">
+                {% for scoring, value in metrics["class_-1"].items() %}
+                <li>{{ scoring }}: {{ '%.4f'|format(value) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h3>Hold</h3>
+            <ul class="numerical-scoring-list">
+                {% for scoring, value in metrics["class_0"].items() %}
+                <li>{{ scoring }}: {{ '%.4f'|format(value) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h3>Long</h3>
+            <ul class="numerical-scoring-list">
+                {% for scoring, value in metrics["class_1"].items() %}
+                <li>{{ scoring }}: {{ '%.4f'|format(value) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div style="margin-left: 50px;">
+            <h3>Confusion Matrix</h3>
+            <div class="num-confusion">
+                {% for rows in confusion %}
+                    {% for cols in rows %}
+                    <div class="confusion-value">{{ cols }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <p style="font-size: 20px; margin-left: 5px;"><b>Overall Accuracy</b>: {{ '%.4f'|format(metrics["accuracy"]) }}</p>
+    </div>
+
+    <hr>
+
+    <div class="backtesting-result-display">
+        <h3 style="font-size: 25px; margin-left: 5px;">Backtesting Results: </h3>
+        <ul>
+            {% for test, value in backtest_result.items() %}
+            <li style="font-size: 20px;">{{test}}: {{'%.4f'|format(value)}}</li>
+            {% endfor %}
         </ul>
     </div>
 
     <div class="img-text-display">
         <div class="image-wrapper">
-            <img src="{{ url_for('static', filename="images/placeholder.jpg") }}">
-            <p>Text 1</p>
+            <img src="{{ url_for('static', filename="images/numerical_model/prc_curve.jpg") }}">
+            <p>Precision Recall Curve</p>
         </div>
 
         <div class="image-wrapper">
-            <img src="{{ url_for('static', filename="images/placeholder.jpg") }}">
-            <p>Text 2</p>
+            <img src="{{ url_for('static', filename="images/numerical_model/roc_curve.jpg") }}">
+            <p>Receiver Operating Characteristic Curve</p>
+        </div>
+
+        <div class="image-wrapper">
+            <img src="{{ url_for('static', filename="images/numerical_model/learning_curve.jpg") }}">
+            <p>Learning Curve</p>
         </div>
 
         <div>

@@ -270,7 +270,7 @@ def save_model(gamma: float, reduction_type: str, weight: torch.Tensor | np.ndar
                train_dataset: torch.utils.data.Dataset, test_dataset: torch.utils.data.Dataset, 
                val_dataset: torch.utils.data.Dataset, tokenizer_params: dict, batch_size: int, 
                lr: float, weight_decay: float, epochs: int, 
-               threshold: float, patience: int, all_loss: list[float]):
+               threshold: float, patience: int, all_loss: list[float], confusion: list):
     
     # save the model and with their huggingface utils (faster inference)
     model_pt_path = os.path.join(pt_dir, "best_finbert.pt")
@@ -322,6 +322,8 @@ def save_model(gamma: float, reduction_type: str, weight: torch.Tensor | np.ndar
         },
         
         "all_loss": all_loss,
+        
+        "confusion_matrix": confusion,
         
         "random_state": 67
     }
@@ -415,6 +417,6 @@ if save.lower().strip() == "y":
                weight, train_dataset, test_dataset,
                val_dataset, tokenizer_params, batch_size, 
                lr, weight_decay, epochs, 
-               best_threshold, total_patience, all_loss)
+               best_threshold, total_patience, all_loss, confusion.tolist())
 else:
     print("Model is not saved. Previous saved params and models are untouched")

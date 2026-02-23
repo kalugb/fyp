@@ -8,18 +8,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='global_css.css') }}">
 </head>
 <body>
-    <nav class="admin-mode-display" style="{% if not admin_mode %} display: none; {% endif %}">
-        <p>You are in <b style="color: red;">admin mode</b></p>
+    <nav class="admin-mode-display" style="{% if admin_mode %} display: flex; {% endif %}">
+        <p>Currently in <b style="color: red;">admin mode</b></p>
     </nav>
 
     {% if logout %}
     <nav class="logout-msg" id="logout-msg">
-        You have been successfully logged out. Back to User mode
+        Successfully logged out. Back to User mode
     </nav>
     <script>
         window.onload = function() {
             const header = document.querySelector(".header-container");
-            header.style.marginTop = "30px";
+            header.style.marginTop = "130px";
 
             window.scrollTo({top: 0, behavior: 'smooth'});
 
@@ -31,15 +31,15 @@
                 
                 setTimeout(() => {
                     msg.remove();
-                    header.style.marginTop = "0px";
+                    header.style.marginTop = "80px";
                 }, 600);
             }, 3000);
         }
     </script>
     {% endif %}
 
-    <header class="header-container" style="{% if not admin_mode %} margin-top: 0px; {% endif %}">
-        <h1>Stock Market Analysis</h1>
+    <!--To move the main section if admin mode display is not display, thus margin of 80 (total height of the navbar)-->
+    <header class="header-container" style="{% if not admin_mode %} margin-top: 80px; {% endif %}">
         <nav class="top-nav-bar">
             <div>
                 <a href="{{ url_for('home') }}" class="logo"><h1>Logo</h1></a>
@@ -53,6 +53,7 @@
                     <a href="{{ url_for('home') }}" class="admin-link">Main Page</a>
                 </div>
                 {% endblock %}
+
                 {% if admin_mode %}
                 <div>
                     <a href="{{ url_for('admin.admin_logout') }}" class="admin-link">Logout</a>
@@ -93,7 +94,6 @@
     {% block after_header %}{% endblock %}
 
     {% block content %}{% endblock %}
-
 
     <footer>
         <p>Stock Market Analysis&copy; | Daniel Yong</p>

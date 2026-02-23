@@ -19,11 +19,12 @@
     <form action="{{ url_for('admin.upload_files') }}" class="form-model_testing", 
         method="post" enctype="multipart/form-data" id="upload-form">
         <label for="upload numerical dataset" class="global-label">Upload new numerical dataset features (in .csv format): </label> <br>
-        <label for="instruction">(Instructions)</label> <br> 
+        <label for="instruction">Column order should be like this: <b>(Date, Open, High, Low, Close, Adj Close, Volume)</b></label> <br> 
+        <label for="label instruction">Date must be label. Set it in pandas using .set_index()</label> <br>
         <input type="file" accept=".csv" name="file_num"> <br> <br> <br>
 
         <label for="upload nlp dataset" class="global-label">Upload new NLP dataset features (in .csv format): </label> <br>
-        <label for="instruction">(Instructions)</label> <br> 
+        <label for="instruction"></label>Column order should be like this: <b>(text, label)</b> <br> 
         <input type="file" accept=".csv" name="file_nlp"> <br> <br>
 
         <button class="global-button" type="submit">
@@ -40,7 +41,6 @@
 
         <p id="before-results" style="font-size: 20px; display: block; margin-left: 5px;">Model result will show here after testing</p>
 
-        <!-- TODO: design something that makes result lookable -->
         <div class="result-container">
             <div class="num-result-container" style="display: none" id="num-result-container">
                 <h3>Numerical Model Test Results</h3>

@@ -14,36 +14,90 @@
 
 {% block content %}
 <main>
-    <div class="numerical-parameter-info">
-        <h3>Parameter used by model</h3>
-
-        <ul class="numerical-parameter-list">
-            <li>Parameter 1</li>
-            <li>Parameter 2</li>
-            <li>Parameter 3</li>
-            <li>Parameter 4</li>
-        </ul>
+    <h3 style="margin: 5px; font-size: 25px">Parameter used by model</h3>
+    <div class="nlp-parameter-info">
+        <div>
+            <h3>Hyperparameter List</h3>
+            <ul class="numerical-parameter-list">
+                <li>Model Used: {{ model_name }}</li>
+                {% for params, value in params.items() %}
+                <li>{{ params }}: {{ value }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h3>Loss Parameter</h3>
+            <ul class="numerical-parameter-list">
+                {% for params, value in loss_params.items() %}
+                <li>{{ params }}: {{ value }}</li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 
-    <div class="numerical-scoring-info">
-        <h3>Scoring: </h3>
+    <hr>
 
-        <ul class="numerical-scoring-list">
-            <li>Scoring 1</li>
-            <li>Scoring 2</li>
-            <li>Scoring 3</li>
-        </ul>
+    <h3 style="margin: 5px; font-size: 25px">Scoring: </h3>
+    <div class="nlp-scoring-info">
+        <div>
+            <h3>Negative</h3>
+            <ul class="numerical-scoring-list">
+                {% for metric, value in metrics["class_-1"].items() %}
+                <li>{{ metric }}: {{ '%.4f'|format(value) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h3>Neutral</h3>
+            <ul class="numerical-scoring-list">
+                {% for metric, value in metrics["class_0"].items() %}
+                <li>{{ metric }}: {{ '%.4f'|format(value) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h3>Positive</h3>
+            <ul class="numerical-scoring-list">
+                {% for metric, value in metrics["class_1"].items() %}
+                <li>{{ metric }}: {{ '%.4f'|format(value) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div style="margin-left: 50px;">
+            <h3>Confusion Matrix</h3>
+            <div class="nlp-confusion">
+                {% for rows in confusion %}
+                    {% for cols in rows %}
+                    <div>{{ cols }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
     </div>
+
+    <div>
+        <p style="font-size: 20px; margin-left: 5px;"><b>Overall Accuracy</b>: {{ '%.4f'|format(metrics["accuracy"]) }}</p>
+    </div>
+    
+    <hr>
 
     <div class="img-text-display">
         <div class="image-wrapper">
-            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
-            <p>Text 1</p>
+            <img src="{{ url_for('static', filename='images/nlp_model/prc_curve.jpg') }}">
+            <p>Precision Recall Curve</p>
         </div>
 
         <div class="image-wrapper">
-            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
-            <p>Text 2</p>
+            <img src="{{ url_for('static', filename='images/nlp_model/roc_curve.jpg') }}">
+            <p>Receiver Operating Characteristic Curve</p>
+        </div>
+
+        <div class="image-wrapper">
+            <img src="{{ url_for('static', filename='images/nlp_model/threshold_tuning_class0_class1.jpg') }}">
+            <p>Precision/Recall/F1 scores for all threshold (Negative/Neutral)</p>
         </div>
 
         <div>
