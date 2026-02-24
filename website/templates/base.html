@@ -45,9 +45,11 @@
                 <a href="{{ url_for('home') }}" class="logo"><h1>Logo</h1></a>
             </div>
             <div class="nav-links">
+                {% block at_about_us %}
                 <div>
-                    <a href="#" class="admin-link">About Us</a>
+                    <a href="{{ url_for('about_us') }}" class="admin-link">About Us</a>
                 </div>
+                {% endblock %}
                 {% block main_page %}
                 <div class="nav-lists">
                     <a href="{{ url_for('home') }}" class="admin-link">Main Page</a>
@@ -97,7 +99,7 @@
 
     <footer>
         <p>Stock Market Analysis&copy; | Daniel Yong</p>
-        <p>Contact: 0123456789 | <a href="#">About Us</a></p>
+        <p>Contact: 0123456789 {% block at_about_us_footer %}<a href={{ url_for('about_us') }}>| About Us</a></p>{% endblock %}
         {% if admin_mode %}
         <p style="color: red;"><b>Currently in Admin Mode</b></p>
         {% endif %}

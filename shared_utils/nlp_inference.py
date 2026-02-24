@@ -39,6 +39,9 @@ def save_graph(y, output_probs):
     from sklearn.metrics import precision_recall_curve, roc_curve, auc, average_precision_score
     from sklearn.preprocessing import LabelBinarizer
     
+    y = np.array(y)
+    output_probs = np.array(output_probs)
+    
     # PRC curve
     lb = LabelBinarizer()
     y_test_binarized = lb.fit_transform(y)

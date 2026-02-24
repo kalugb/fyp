@@ -20,12 +20,11 @@
                 <script src="https://s3.tradingview.com/tv.js"></script>
             </div>
             <div class="stock-list" id="stock-list">
-                <a data-symbol="AAPL" class="stock-link stock-active">AAPL</a>
-                <a data-symbol="MSFT" class="stock-link">MSFT</a>
-                <a data-symbol="BA" class="stock-link">BA</a>
-                <a data-symbol="AMZN" class="stock-link">AMZN</a>
+                <button data-symbol="AAPL" class="stock-link stock-active">AAPL</button>
+                <button data-symbol="MSFT" class="stock-link">MSFT</button>
+                <button data-symbol="BA" class="stock-link">BA</button>
+                <button data-symbol="AMZN" class="stock-link" style="border-right: none">AMZN</button>
             </div>
-            
         </div>
         <!-- TradingView Widget END -->
 
@@ -33,8 +32,8 @@
             <div>
                 <h1 style="color: {{ display_color }}">{{ '%.2f'|format(latest_closing_price) }}</h1>
                 <p style="color: {{ display_color }}">
-                    {% if closing_price_diff > 0 %} + {% else %} - {% endif %}
-                    {{ closing_price_diff }}
+                    {% if closing_price_diff > 0 %} + {% endif %}
+                    {{ '%.2f'|format(closing_price_diff) }}
                 </p>
                 <p style="color: {{ display_color }}">{{ diff_percentage }}%</p>
             </div>
@@ -67,7 +66,7 @@
             style="margin-left: 5px" name="stockPriceUSD" value="{{ '%.2f'|format(latest_closing_price) }}"> <br> <br>
 
             <p style="font-size: 120%">Current conversion rate: </p>
-            <p style="font-size: 120%; margin-top: -10px">1 USD: {{ '%.2f'|format(conversion_rate) }} MYR</p>"
+            <p style="font-size: 120%; margin-top: -10px">1 USD: {{ '%.2f'|format(conversion_rate) }} MYR</p>
 
             <button class="global-button" type="button" id="retrieve-data"> Retrieve Current Closing Price</button>
 

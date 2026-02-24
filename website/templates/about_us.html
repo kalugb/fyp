@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block at_about_us %}{% endblock %}
+
+{% block content %}
+<!--Add content here-->
+<main>
+    <div class="top-section">
+        <h1>Stock Market Analysis</h1>
+
+        <p>Main content</p>
+    </div>
+
+    <hr>
+
+    <div class="middle-first-container">
+        <div>
+            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
+        </div>
+
+        <div>
+            <p>Placeholder text</p>
+        </div>
+    </div>
+
+
+</main>
+{% endblock %}
+
+{% block at_about_us_footer %}{% endblock %}

@@ -4,14 +4,17 @@
 <main>
     <div class="processing-center">
         <div class="icon-wrapper">
-            <img src="{{ url_for('static', filename="images/placeholder.jpg") }}" class="icon" alt="icon">
-            <p class="icon-desc">placeholder icon</p>
+            <img src="{{ url_for('static', filename="cat_V1.gif") }}" class="icon" alt="icon">
 
             <br>
 
             <h2 id="result-text" style="font-size: 30px;">Processing Results</h2>
             <p> (Estimated 10 seconds) </p>
             <h4 style="font-weight: normal;">This will take a while...</h4>
+
+            <div class="cat-container">
+                <img src="{{ url_for('static', filename='cat_running.gif') }}">
+            </div>
 
             <div class="tip-container">
                 <h3>Tips: </h3>

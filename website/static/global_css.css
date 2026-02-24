@@ -318,15 +318,19 @@ footer p {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 30px;
     flex: 1;
     margin-top: 20px;
 }
 .stock-link {
     text-decoration: none;
+    background: none;
+    border: none;
+    border-right: 1px solid black;
     color: black;
     font-size: var(--header-nav-font-size);
     white-space: nowrap;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 .stock-active {
     font-size: calc(var(--header-nav-font-size) + 5px);
@@ -382,11 +386,7 @@ footer p {
     margin-top: 30px;
     padding: 10px;
 }
-.page-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 
 /* Styling for cofirmation.html (all use global css style so none lol */
 
@@ -422,11 +422,22 @@ footer p {
     align-items: center;
     border: 2px solid black;
     border-radius: 5px;
+    background-color: whitesmoke;
 }
 .tip-container h3, .tip-container p {
     margin: 0px;
     padding: 5px;
     font-size: 17.5px;
+}
+.cat-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cat-container img {
+    translate: 0px 10px;
+    width: 20%;
+    height: 1%;    
 }
 
 /* Styling for numerical_model.html and nlp_model.html*/
@@ -568,4 +579,30 @@ footer p {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+/* about_us.html styling */
+.top-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.middle-first-container {
+    display: flex;
+    justify-content: flex-start;   
+    gap: 20px; 
+}
+.middle-first-container div:nth-child(1) {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+.middle-first-container div img {
+    width: 50%;
+    height: 100%;
+}
+.middle-first-container div:nth-child(2) {
+    flex: 2;
 }

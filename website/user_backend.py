@@ -45,6 +45,10 @@ def home():
                            logout=logout, latest_closing_price=latest_closing_price, 
                            display_color=display_color, closing_price_diff=closing_price_diff,
                            diff_percentage=diff_percentage)
+
+@app.route("/about_us")
+def about_us():
+    return render_template("about_us.html")
     
 # TODO: Change this
 @app.route("/get_stock_data/<symbol>")
@@ -213,6 +217,6 @@ def result():
                            overall_result=overall_result)
     
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=True)
     
     
