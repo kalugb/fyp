@@ -4,14 +4,16 @@ import pandas as pd
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from website.backend_functions import update_dataset, generate_session_key, get_exchange_rate
+from website.backend_functions import update_dataset, generate_session_key, get_exchange_rate, get_raw_path, load_df
 from admin_backend import admin_app
 from download_backend import download_app
 
-from shared_utils.load_utils import load_raw_df
-
-raw_df, df_inference_path = load_raw_df()
-raw_df = update_dataset(df_inference_path)
+# default loading to AAPL
+stock_path = get_raw_path()
+for stock, path in stock_path.items():
+    update_dataset(stock, path)
+    
+raw_df = load_df("AAPL")
 
 # get latest closing price (by default AAPL)
 latest_closing_price = raw_df.iloc[-1, :-1]["Adj Close"].tolist()
@@ -35,7 +37,8 @@ conversion_rate = get_exchange_rate()
 def inject_admin_mode():
     admin_mode = session.get("admin_mode", False)
     stock_active = session.get("stock_active", "AAPL")
-    return dict(admin_mode=admin_mode, stock_active=stock_active)
+    admin_stock_active = session.get("admin_stock_active", "AAPL")
+    return dict(admin_mode=admin_mode, stock_active=stock_active, admin_stock_active=admin_stock_active)
 
 # main_page.html
 @app.route("/")
@@ -50,21 +53,41 @@ def home():
 def about_us():
     return render_template("about_us.html")
     
-# TODO: Change this
 @app.route("/get_stock_data/<symbol>")
-def get_stock_data(symbol):
-    stock_data = symbol
+def get_stock_data(symbol):    
+    using_df = load_df(symbol)
     session["stock_active"] = symbol
     
-    return {
-        "symbol": symbol,
-        "price": symbol,
-        "change": symbol,
-        "test": session["stock_active"]
+    stock_info = {
+        "AAPL": ["Apple Inc - NASDAQ", "Electronic Technology and Telecommunications Equipment"],
+        "MSFT": ["Microsoft Corporation - NASDAQ", "Software and Services"],
+        "BA": ["Boeing Company - NASDAQ", "Aerospace and Defense"],
+        "AMZN": ["Amazon.com, Inc. - NASDAQ", "Internet Retail and Services"]
     }
+    
+    # get latest closing price 
+    latest_closing_price = using_df.iloc[-1]["Adj Close"].tolist()
+    last_closing_price = using_df.iloc[-2]["Adj Close"].tolist()
+    closing_price_diff = latest_closing_price - last_closing_price
+    diff_percentage = round((closing_price_diff / last_closing_price) * 100, 2)
+    print(diff_percentage)
+    print(type(diff_percentage))
+    if closing_price_diff > 0:
+        display_color = "green"
+    else:
+        display_color = "red"
+        
+    return jsonify({
+        "latest_closing_price": latest_closing_price,
+        "closing_price_diff": closing_price_diff,
+        "diff_percentage": diff_percentage,
+        "display_color": display_color,
+        "stock_symbol_name": stock_info[symbol][0],
+        "stock_brief_info": stock_info[symbol][1]
+    })
+    
 
-# retrieve latest closing price
-# TODO: Fix this after setting session
+# TODO: change this so that it gets the selected stock price
 @app.route("/retrieve_data", methods=["POST"])
 def retrieve_data():
     data = raw_df.iloc[-1, :-1]

@@ -11,7 +11,7 @@
     <h2>Welcome Back, Admin</h2>
 
     <div style="margin-bottom: 20px; margin-top: 20px;">
-        <h2>AAPL Stock Price - By TradingView</h2>
+        <h2 id="stock-title">AAPL Stock Price - By TradingView</h2>
         <!-- TradingView Widget BEGIN -->
         <div id="tv-chart-wrapper">
             <div class="tradingview-widget-container">
@@ -27,9 +27,8 @@
         </div>
         <!-- TradingView Widget END -->
         
-        <button class="global-button" id="download-btn" 
-            onclick="location.href = '{{ url_for('download.download_historical') }}'">
-        Download Dataset
+        <button class="global-button" id="download-btn" data-symbol="AAPL">
+            Download AAPL Dataset
         </button>
     </div>
 
@@ -41,6 +40,8 @@
     </div>
     <script>    
         const stock_link = document.querySelectorAll(".stock-link");
+        const stock_title = document.getElementById("stock-title");
+        const download_btn = document.getElementById("download-btn");
 
         function loadChart(symbol) {
             const container = document.getElementById("tv-chart-container");
@@ -87,7 +88,17 @@
                 stock_symbol = symbol;
 
                 loadChart(stock_symbol);
+
+                stock_title.textContent = `${stock_symbol} Stock Price - By TradingView`
+                download_btn.dataset.symbol = stock_symbol;
+                download_btn.textContent = `Download ${stock_symbol} Dataset`;
             });
+        });
+
+        download_btn.addEventListener("click", () => {
+            stock_symbol = download_btn.dataset.symbol;
+
+            location.href = `/download_historical/${stock_symbol}`;
         });
     </script>
 </main>

@@ -7,9 +7,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import pandas as pd
 import numpy as np
 
-raw_inference_path = os.path.join(os.getcwd(), "csv_files", "inference", "historical_data.csv")
-cleaned_inference_path = os.path.join(os.getcwd(), "csv_files", "inference", "cleaned_data.csv")
-
 def generate_session_key():
     import string
     import secrets
@@ -28,6 +25,27 @@ def get_exchange_rate():
     
     return rate
 
+def get_raw_path() -> dict:
+    stock_list = ["AAPL", "MSFT", "BA", "AMZN"]
+    paths = []
+    stock_path_list = {}
+    
+    for stock in stock_list: 
+        path = os.path.join(os.getcwd(), "csv_files", "inference", f"{stock}.csv")
+        paths.append(path)
+        
+    for stock, path in zip(["AAPL", "MSFT", "BA", "AMZN"], paths):
+        stock_path_list[stock] = path
+        
+    return stock_path_list
+
+def get_raw_df(path) -> pd.DataFrame:
+    import pandas as pd
+    
+    df = pd.read_csv(path, index_col=0, parse_dates=True)
+    
+    return df
+
 def get_last_trading_day():
     today = datetime.today() - timedelta(hours=20.5)
     
@@ -40,18 +58,18 @@ def get_last_trading_day():
         
     return last_trading_day.strftime("%Y-%m-%d")
 
-def get_dataset():
+def get_dataset(ticker_symbol, path) -> pd.DataFrame:
     import yfinance as yf
-    
-    ticker_sym = "AAPL"
 
-    ticker = yf.Ticker(ticker_sym)
+    ticker = yf.Ticker(ticker_symbol)
 
     df = ticker.history(period="30y", auto_adjust=False)
     
     df = df.drop(columns=["Dividends", "Stock Splits"])
     
     print("Historical data generated successfully")
+    
+    df.to_csv(path, index=["Date"])
     
     return df
 
@@ -75,40 +93,36 @@ def mean_reversion(df):
     
     return df
     
-def update_dataset(df_path):
+# this runs everything
+def update_dataset(stock, df_path):
     retrieved_raw = False
     
     if not os.path.exists(df_path):
-        raw_df = get_dataset()
+        raw_df = get_dataset(stock, df_path)
         retrieved_raw = True
-        retrieved_latest = True
     else:
         raw_df = pd.read_csv(df_path, index_col="Date", parse_dates=True)
     
     latest_date_in_csv = str(raw_df.index[-1].date())
-    retrieved_latest = False
     
     last_trading_day = get_last_trading_day()
     
     if latest_date_in_csv != last_trading_day and not retrieved_raw:
         print("Retrieving lateset stock data...")
         
-        raw_df = get_dataset()
+        raw_df = get_dataset(stock, df_path)
         
         print(f"Latest dataset retrieved with latest date: {str(raw_df.index[-1].date())}")
-        retrieved_latest = True
     else:
         print("Using the current dataset")
         
-    # update
-    if retrieved_latest or retrieved_raw:
-        raw_df.to_csv(df_path, index_label="Date", index=True)
-        df_cleaned = raw_df.dropna()
-        df_cleaned = mean_reversion(df_cleaned)
-        df_cleaned.to_csv(cleaned_inference_path, index_label="Date", index=True)
-        print("Latest dataset has been updated")
-        
-    return raw_df
+# runs this function when the website first launches, and when stock is changed
+def load_df(stock):
+    path = os.path.join(os.getcwd(), "csv_files", "inference", f"{stock}.csv")
+    
+    df = pd.read_csv(path, index_col="Date", parse_dates=True)
+    
+    return df
     
 if __name__ == "__main__":
     # raw_df = update_dataset(raw_inference_path)

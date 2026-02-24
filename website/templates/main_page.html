@@ -12,7 +12,7 @@
     <hr>
     
     <div style="margin-bottom: 20px; margin-top: 20px;">
-        <h2>AAPL Stock Price - By TradingView</h2>
+        <h2 id="stock-title">AAPL Stock Price - By TradingView</h2>
         <!-- TradingView Widget BEGIN -->
         <div id="tv-chart-wrapper">
             <div class="tradingview-widget-container">
@@ -30,23 +30,25 @@
 
         <div class="stock-info-container">
             <div>
-                <h1 style="color: {{ display_color }}">{{ '%.2f'|format(latest_closing_price) }}</h1>
-                <p style="color: {{ display_color }}">
+                <h1 id="stock-price" style="color: {{ display_color }}">{{ '%.2f'|format(latest_closing_price) }}</h1>
+                <p id="stock-display-color" style="color: {{ display_color }}">
                     {% if closing_price_diff > 0 %} + {% endif %}
                     {{ '%.2f'|format(closing_price_diff) }}
                 </p>
-                <p style="color: {{ display_color }}">{{ diff_percentage }}%</p>
+                <p id="stock-diff-percentage" style="color: {{ display_color }}">
+                    {% if diff_percentage > 0 %} + {% endif %}
+                    {{ '%.2f'|format(diff_percentage) }}
+                </p>
             </div>
 
             <div>
-                <p>Apple Inc - NASDAQ</p>
-                <p>Electronic Technology and Telecommunications Equipment</p>
+                <p id="stock-symbol-name">Apple Inc - NASDAQ</p>
+                <p id="stock-brief-info">Electronic Technology and Telecommunications Equipment</p>
             </div>
         </div>
         
-        <button class="global-button" id="download-btn" 
-            onclick="location.href = '{{ url_for('download.download_historical') }}'">
-        Download Dataset
+        <button class="global-button" id="download-btn" data-symbol="AAPL">
+            Download AAPL Dataset
         </button>
     </div>
 
@@ -117,7 +119,8 @@
         const price_myr = document.getElementById("price-myr");
         const price_usd = document.getElementById("price-usd");
         const retrieve_btn = document.getElementById("retrieve-data");
-        const scroll_btn = document.getElementById("scroll-to-top-btn")
+        const scroll_btn = document.getElementById("scroll-to-top-btn");
+        const download_btn = document.getElementById("download-btn");
 
         price_myr.addEventListener("input", () => {
             const myr = parseFloat(price_myr.value);
@@ -190,6 +193,12 @@
                 scroll_btn.classList.remove("show");
             }
         });
+
+        download_btn.addEventListener("click", () => {
+            stock_symbol = download_btn.dataset.symbol;
+
+            location.href = "/download_historical/" + stock_symbol;
+        });
     });
 
     const stock_link = document.querySelectorAll(".stock-link");
@@ -235,10 +244,43 @@
             active_link.classList.remove("stock-active");
             link.classList.toggle("stock-active");
 
-            const symbol = link.dataset.symbol;
-            stock_symbol = symbol;
+            const stock_symbol = link.dataset.symbol;
 
             loadChart(stock_symbol);
+
+            fetch(`/get_stock_data/${stock_symbol}`)
+            .then(response => response.json())
+            .then(data => {
+                const stock_price = document.getElementById("stock-price");
+                // stock_display_color is pointing to difference of stock price from yesterday (this code sucks)
+                // TODO: Fix the naming
+                const stock_display_color = document.getElementById("stock-display-color");
+                const stock_diff_percentage = document.getElementById("stock-diff-percentage");
+                const stock_symbol_name = document.getElementById("stock-symbol-name");
+                const stock_brief_info = document.getElementById("stock-brief-info");
+                const download_btn = document.getElementById("download-btn");
+                const stock_title = document.getElementById("stock-title");
+
+                stock_price.style.color = data.display_color;
+                stock_display_color.style.color = data.display_color;
+                stock_diff_percentage.style.color = data.display_color;
+
+                stock_price.textContent = data.latest_closing_price.toFixed(2);
+                if (data.closing_price_diff > 0) {
+                    stock_display_color.textContent = "+ " + data.closing_price_diff.toFixed(2);
+                    stock_diff_percentage.textContent = "+ " + data.diff_percentage.toFixed(2);
+                } else {
+                    stock_display_color.textContent = data.closing_price_diff.toFixed(2);
+                    stock_diff_percentage.textContent = data.diff_percentage.toFixed(2);
+                }
+
+                stock_symbol_name.textContent = data.stock_symbol_name;
+                stock_brief_info.textContent = data.stock_brief_info;
+
+                stock_title.textContent = stock_symbol + " Stock Price - By TradingView"
+                download_btn.textContent = "Download " + stock_symbol + " Dataset";
+                download_btn.dataset.symbol = stock_symbol
+            });
         });
     });
 </script>
