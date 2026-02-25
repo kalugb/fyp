@@ -58,6 +58,15 @@
         <h2>Stock Market Prediction</h2>
 
         <div id="input-closing-price">
+            <label for="select-stock" class="global-label">Select Stock (Price will be auto update after selecting one): </label>
+            <div class="select-stock-btn-list">
+                <button data-symbol="AAPL" class="select-stock-btn stock-selected" type="button" style="border-left: none;">AAPL</button>
+                <button data-symbol="MSFT" class="select-stock-btn" type="button">MSFT</button>
+                <button data-symbol="BA" class="select-stock-btn" type="button">BA</button>
+                <button data-symbol="AMZN" class="select-stock-btn" type="button" style="border-right: none;">AMZN</button>
+            </div>
+
+            <strong id="stock-warning" style="display: none; margin-top: 10px; color: red;"></strong> <br>
             <!-- Input number, others will auto fill in during conversion -->
             <label for="price-myr" class="global-label">Enter Today's Closing Price (In MYR):</label>
             <input type="number" id="price-myr" placeholder="RM" step="0.01" class="global-input" 
@@ -70,9 +79,9 @@
             <p style="font-size: 120%">Current conversion rate: </p>
             <p style="font-size: 120%; margin-top: -10px">1 USD: {{ '%.2f'|format(conversion_rate) }} MYR</p>
 
-            <button class="global-button" type="button" id="retrieve-data"> Retrieve Current Closing Price</button>
-
             <p id="loading-msg"></p>
+
+            <hr>
 
             <!--Display error message-->
             <p>{{ error }}</p>
@@ -115,94 +124,15 @@
 </main>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const price_myr = document.getElementById("price-myr");
-        const price_usd = document.getElementById("price-usd");
-        const retrieve_btn = document.getElementById("retrieve-data");
-        const scroll_btn = document.getElementById("scroll-to-top-btn");
-        const download_btn = document.getElementById("download-btn");
-
-        price_myr.addEventListener("input", () => {
-            const myr = parseFloat(price_myr.value);
-
-            if (isNaN(myr)) { 
-                price_usd.value = ""; 
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append("stockPriceMYR", myr)
-
-            fetch("/convert_to_usd", {method: "POST", body: formData})
-            .then(response => response.json())
-            .then(results => {
-                price_usd.value = parseFloat(results.data).toFixed(2)
-            })
-        })
-        
-        price_usd.addEventListener("input", () => {
-            const usd = parseFloat(price_usd.value);
-
-            if (isNaN(usd)) { 
-                price_myr.value = ""; 
-                return;
-            }
-
-            const formData = new FormData()
-            formData.append("stockPriceUSD", usd)
-
-            fetch("/convert_to_myr", {method: "POST", body: formData})
-            .then(response => response.json())
-            .then(results => {
-                price_myr.value = parseFloat(results.data).toFixed(2)
-            })
-        })
-
-        retrieve_btn.addEventListener("click", () => {
-            const loading_msg = document.getElementById("loading-msg");
-            loading_msg.innerHTML = "Getting latest data...";
-
-            fetch("/retrieve_data", {method: "POST"})
-            .then(response => response.json())
-            .then(results => {
-                price_usd.value = parseFloat(results.data_usd).toFixed(2);
-                price_myr.value = parseFloat(results.data_myr).toFixed(2);
-            })
-            .catch(err => console.error(err))
-            .finally(() => {
-                loading_msg.innerHTML = "";
-            });
-        })
-
-        scroll_btn.addEventListener("click", () => {
-            window.scrollTo({
-                top: 0,
-            })
-        })
-
-        window.addEventListener("scroll", () => {
-            const scrollY = window.scrollY || window.pageYOffset;
-            const docHeight = document.documentElement.scrollHeight;
-            const winHeight = window.innerHeight;
-
-            const scrollPercentage = (scrollY / (docHeight - winHeight)) * 100;
-            
-            if (scrollPercentage > 50) {
-                scroll_btn.classList.add("show");
-            } else {
-                scroll_btn.classList.remove("show");
-            }
-        });
-
-        download_btn.addEventListener("click", () => {
-            stock_symbol = download_btn.dataset.symbol;
-
-            location.href = "/download_historical/" + stock_symbol;
-        });
-    });
-
+    const select_stock_btns = document.querySelectorAll(".select-stock-btn");
+    const price_myr = document.getElementById("price-myr");
+    const price_usd = document.getElementById("price-usd");
+    const retrieve_btn = document.getElementById("retrieve-data");
+    const scroll_btn = document.getElementById("scroll-to-top-btn");
+    const download_btn = document.getElementById("download-btn");
     const stock_link = document.querySelectorAll(".stock-link");
 
+    // load chart after another stock is selected
     function loadChart(symbol) {
         const container = document.getElementById("tv-chart-container");
         container.innerHTML = "";
@@ -234,8 +164,10 @@
         });
     }
 
-    loadChart("NASDAQ:AAPL")
+    // default chart (AAPL)
+    loadChart("AAPL");
 
+    // display stock chart and its info
     stock_link.forEach(link => {
         link.addEventListener("click", e => {
             e.preventDefault();
@@ -245,8 +177,6 @@
             link.classList.toggle("stock-active");
 
             const stock_symbol = link.dataset.symbol;
-
-            loadChart(stock_symbol);
 
             fetch(`/get_stock_data/${stock_symbol}`)
             .then(response => response.json())
@@ -280,8 +210,108 @@
                 stock_title.textContent = stock_symbol + " Stock Price - By TradingView"
                 download_btn.textContent = "Download " + stock_symbol + " Dataset";
                 download_btn.dataset.symbol = stock_symbol
+
+                // load tradingview chart
+                loadChart(stock_symbol);
             });
         });
+    });
+
+    // currency conversion
+    price_myr.addEventListener("input", () => {
+        const myr = parseFloat(price_myr.value);
+
+        if (isNaN(myr)) { 
+            price_usd.value = ""; 
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("stockPriceMYR", myr)
+
+        fetch("/convert_to_usd", {method: "POST", body: formData})
+        .then(response => response.json())
+        .then(results => {
+            price_usd.value = parseFloat(results.data).toFixed(2)
+        })
+    })
+    
+    price_usd.addEventListener("input", () => {
+        const usd = parseFloat(price_usd.value);
+
+        if (isNaN(usd)) { 
+            price_myr.value = ""; 
+            return;
+        }
+
+        const formData = new FormData()
+        formData.append("stockPriceUSD", usd)
+
+        fetch("/convert_to_myr", {method: "POST", body: formData})
+        .then(response => response.json())
+        .then(results => {
+            price_myr.value = parseFloat(results.data).toFixed(2)
+        })
+    })
+
+    // stock button listener, fetch price as well
+    select_stock_btns.forEach(btn => {
+        btn.addEventListener("click", e => {
+            e.preventDefault();
+
+            const stock_selected_btn = document.querySelector(".select-stock-btn.stock-selected");
+            const warning = document.getElementById("stock-warning");
+            const stock_symbol = btn.dataset.symbol;
+            btn.classList.toggle("stock-selected");
+            stock_selected_btn.classList.remove("stock-selected");
+
+            if (stock_symbol !== "AAPL") {
+                warning.style.display = "block";
+                warning.textContent = "The model is trained on AAPL dataset. Using other stock might give incorrect results. Please take note";
+            } else {
+                warning.textContent = "";
+                warning.style.display = "none";
+            }
+
+            fetch(`/retrieve_data/${stock_symbol}`, {method: "POST"})
+                .then(response => response.json())
+                .then(results => {
+                    price_usd.value = parseFloat(results.data_usd).toFixed(2);
+                    price_myr.value = parseFloat(results.data_myr).toFixed(2);
+                })
+                .catch(err => console.error(err))
+                .finally(() => {
+                    loading_msg.innerHTML = "";
+            });
+        });
+    });
+
+    // scroll to top button
+    scroll_btn.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+        })
+    })
+
+    // detech how much scroll performed, show button if scrollY > 50%
+    window.addEventListener("scroll", () => {
+        const scrollY = window.scrollY || window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+
+        const scrollPercentage = (scrollY / (docHeight - winHeight)) * 100;
+        
+        if (scrollPercentage > 50) {
+            scroll_btn.classList.add("show");
+        } else {
+            scroll_btn.classList.remove("show");
+        }
+    });
+
+    download_btn.addEventListener("click", () => {
+        stock_symbol = download_btn.dataset.symbol;
+
+        location.href = "/download_historical/" + stock_symbol;
     });
 </script>
 {% endblock %}

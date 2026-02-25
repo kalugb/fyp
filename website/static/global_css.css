@@ -340,6 +340,31 @@ footer p {
     cursor: pointer;
     font-size: calc(var(--header-nav-font-size) + 2px);
 }
+.select-stock-btn-list {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.select-stock-btn {
+    border: none;
+    background: none;
+    text-decoration: none;
+    color: black;
+    font-size: var(--header-nav-font-size);
+    white-space: nowrap;
+    margin-top: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-right: 0.5px solid black;
+}
+.stock-selected {
+    color: blue;
+    font-size: calc(var(--header-nav-font-size) + 5px);
+}
+.select-stock-btn:not(.stock-selected):hover {
+    cursor: pointer;
+    font-size: calc(var(--header-nav-font-size) + 2px);
+}
 
 /*Styling for admin_login.html*/
 .return-home {

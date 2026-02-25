@@ -231,7 +231,6 @@ def threshold_tuning(val_dataloader, threshold_list=np.linspace(0.25, 0.4, 20),
 def testing(test_dataloader, threshold_tuned=True, set_threshold=0.33, tune_class=0, fallback_class=1, untuned_class=2):
     y_pred = []
     y_true = []
-    y_probs = []
     with torch.no_grad():
         for batch_input_ids, batch_attention_mask, batch_labels in test_dataloader:
             batch_input_ids = batch_input_ids.to(device)
@@ -252,7 +251,6 @@ def testing(test_dataloader, threshold_tuned=True, set_threshold=0.33, tune_clas
                 
                     y_pred.append(label)
                     y_true.append(true_labels.cpu().item())
-                    y_probs.append(pred.cpu().numpy())
             else:
                 predictions = torch.argmax(preds.logits, dim=1)
                 
@@ -265,12 +263,6 @@ def testing(test_dataloader, threshold_tuned=True, set_threshold=0.33, tune_clas
     
     report = classification_report(y_true, y_pred)
     confusion = confusion_matrix(y_true, y_pred)
-    
-    import sys
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-    from shared_utils.nlp_inference import save_graph
-    
-    save_graph(y_true, y_probs)
     
     return report, confusion
 

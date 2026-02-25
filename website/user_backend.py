@@ -56,7 +56,6 @@ def about_us():
 @app.route("/get_stock_data/<symbol>")
 def get_stock_data(symbol):    
     using_df = load_df(symbol)
-    session["stock_active"] = symbol
     
     stock_info = {
         "AAPL": ["Apple Inc - NASDAQ", "Electronic Technology and Telecommunications Equipment"],
@@ -70,8 +69,6 @@ def get_stock_data(symbol):
     last_closing_price = using_df.iloc[-2]["Adj Close"].tolist()
     closing_price_diff = latest_closing_price - last_closing_price
     diff_percentage = round((closing_price_diff / last_closing_price) * 100, 2)
-    print(diff_percentage)
-    print(type(diff_percentage))
     if closing_price_diff > 0:
         display_color = "green"
     else:
@@ -87,10 +84,10 @@ def get_stock_data(symbol):
     })
     
 
-# TODO: change this so that it gets the selected stock price
-@app.route("/retrieve_data", methods=["POST"])
-def retrieve_data():
-    data = raw_df.iloc[-1, :-1]
+@app.route("/retrieve_data/<symbol>", methods=["POST"])
+def retrieve_data(symbol):
+    df = load_df(symbol)
+    data = df.iloc[-1, :-1]
 
     closing_price_usd = data["Adj Close"]
     closing_price_myr = closing_price_usd * conversion_rate
@@ -240,6 +237,6 @@ def result():
                            overall_result=overall_result)
     
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True)
+    app.run(debug=True, use_reloader=False)
     
     
