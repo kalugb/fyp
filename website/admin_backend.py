@@ -8,41 +8,53 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 admin_app = Blueprint("admin", __name__)
 
-@admin_app.before_request
-def set_admin_mode_default():
-    if "admin" not in session:
-        session["admin_mode"] = False
+from connect_db import mongo
         
 # Logic for admin page will be added later
 @admin_app.route("/admin_login", methods=["GET", "POST"])
 def admin_login():
-    if "admin" in session:
+    if "admin_mode" in session:
         return render_template("admin_page.html")
     
     if request.method == "POST":
-        session["admin"] = "admin_name" # will get the admin name later
+        username = request.form.get("username")
+        password = request.form.get("password")
+        
+        if username == "" or password == "":
+            flash("Empty username or password")
+            return redirect(url_for("admin.admin_login"))
+        
+        find_user = mongo.db.user.find_one({"username": username})
+        if not find_user:
+            flash("Invalid username")
+            return redirect(url_for("admin.admin_page"))
+        
+        if find_user["password"] != password: # use bcrypt later
+            flash("Invalid password")
+            return redirect(url_for("admin.admin_page"))
+        
         session["admin_mode"] = True
+
         return redirect(url_for("admin.admin_page"))
         
     return render_template("admin_login.html")
 
 @admin_app.route("/admin_logout")
 def admin_logout():
-    session.pop("admin", None)
-    session.pop("admin_mode", None)
+    session["admin_mode"] = False
     session["logout"] = True
     return redirect(url_for("home"))
 
 @admin_app.route("/admin_page")
 def admin_page():
-    if "admin" not in session:
+    if not session["admin_mode"]:
         flash("Please log in to admin account first")
         return redirect(url_for("admin.admin_login"))
     return render_template("admin_page.html")
 
 @admin_app.route("/model_testing")
 def model_testing():
-    if "admin" not in session:
+    if not session["admin_mode"]:
         flash("Please log in to admin account first")
         return redirect(url_for("admin.admin_login"))
     return render_template("model_testing.html")
@@ -50,7 +62,7 @@ def model_testing():
 @admin_app.route("/nlp_model")
 def nlp_model():
     import numpy as np
-    if "admin" not in session:
+    if not session["admin_mode"]:
         flash("Please log in to admin account first")
         return redirect(url_for("admin.admin_login"))
     
@@ -96,7 +108,7 @@ def nlp_model():
 @admin_app.route("/numerical_model")
 def numerical_model():
     import numpy as np
-    if "admin" not in session:
+    if not session["admin_mode"]:
         flash("Please log in to admin account first")
         return redirect(url_for("admin.admin_login"))
     
@@ -143,7 +155,7 @@ def numerical_model():
 # file handling
 @admin_app.route("/upload_files", methods=["POST"])
 def upload_files():
-    if "admin" not in session:
+    if not session["admin_mode"]:
         flash("Please log in to admin account first")
         return redirect(url_for("admin.admin_login"))
     

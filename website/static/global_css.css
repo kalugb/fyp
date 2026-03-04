@@ -613,21 +613,52 @@ footer p {
     justify-content: center;
     align-items: center;
 }
+.top-section div:nth-child(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
 .middle-first-container {
     display: flex;
     justify-content: flex-start;   
     gap: 20px; 
 }
-.middle-first-container div:nth-child(1) {
+.middle-second-container {
     display: flex;
-    flex: 1;
+    justify-content: flex-start;   
+    gap: 20px; 
+}
+.middle-third-container {
+    display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    gap: 40px;
 }
-.middle-first-container div img {
-    width: 50%;
-    height: 100%;
+.middle-third-container-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 50px;
 }
-.middle-first-container div:nth-child(2) {
-    flex: 2;
+.middle-third-container-img img {
+    height: 50%;
+    width: 200px;
+    margin: 20px;
+}
+.special-mention {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+.special-mention div:nth-child(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }

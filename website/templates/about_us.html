@@ -6,25 +6,131 @@
 <!--Add content here-->
 <main>
     <div class="top-section">
-        <h1>Stock Market Analysis</h1>
-
-        <p>Main content</p>
+        <div>
+            <h1>Stock Market Analysis</h1>
+        </div>
+        <div>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quisquam, voluptatum! Veritatis explicabo voluptatibus similique, veniam cum, quo provident cumque est consequatur molestias odit eligendi laborum reprehenderit dolore, eos autem eaque!</p>
+        </div>
     </div>
 
     <hr>
 
     <div class="middle-first-container">
         <div>
-            <img src="{{ url_for('static', filename='images/placeholder.jpg') }}">
+            <img src="{{ url_for('static', filename='cat.gif') }}">
         </div>
 
         <div>
-            <p>Placeholder text</p>
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Totam, qui, ipsa quidem nesciunt nam debitis assumenda libero sunt nisi incidunt consectetur illo praesentium placeat molestias laborum reprehenderit fugit, quasi ex!</p>
         </div>
     </div>
 
+    <hr>
 
+    <div class="middle-second-container">
+        <div>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta minus ad laboriosam similique sunt eveniet eos, cupiditate tempora ipsum, ut neque, ipsa error molestiae! Placeat modi facere mollitia voluptatum distinctio.</p>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='cat.gif') }}">
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="middle-third-container">
+        <div>
+            <h1>Supported By</h1>
+        </div>
+        <div class="middle-third-container-img">
+            <div>
+                <img src="{{ url_for('static', filename='tech_stack/python.jpg') }}">
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='tech_stack/html_css.jpg') }}">
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='tech_stack/js.jpg') }}">
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='tech_stack/sklearn.jpg') }}">
+            </div>
+        </div>
+        <div class="middle-third-container-img">
+            <div>
+                <img src="{{ url_for('static', filename='tech_stack/pytorch.jpg') }}">
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='tech_stack/flask.jpg') }}">
+            </div>
+            <div>
+                <img src="{{ url_for('static', filename='tech_stack/tradingview.jpg') }}">
+            </div>
+        </div>
+
+        <button class="floating-btn" type="button" id="scroll-to-top-btn">
+            &uarr;
+        </button>
+    </div>
+
+    <hr id="special-mention-hr" style="display: none;">
+    <div class="special-mention" style="display: none;" id="special-mention">
+        <div>
+            <h1>Special Mention</h1>
+        </div>
+
+        <div>
+            <div>
+                <img src="{{ url_for('static', filename='cat.gif') }}">
+            </div>
+
+            <div>
+                <img src="{{ url_for('static', filename='tech_stack/chatgpt.jpg') }}">
+            </div>
+
+            <div>
+                <img src="{{ url_for('static', filename='cat.gif') }}">
+            </div>
+        </div>
+    </div>
 </main>
+<script>
+    const scroll_btn = document.getElementById("scroll-to-top-btn");
+    let clicks = 0
+
+    // scroll to top button
+    scroll_btn.addEventListener("click", () => {
+        clicks += 1;
+
+        if (clicks >= 5) {
+            const special_mention = document.getElementById("special-mention");
+            const special_mention_hr = document.getElementById("special-mention-hr");
+            special_mention_hr.style.display = "block";
+            special_mention.style.display = "flex";
+        }
+
+        window.scrollTo({
+            top: 0,
+        })
+    })
+
+    // detech how much scroll performed, show button if scrollY > 50%
+    window.addEventListener("scroll", () => {
+        const scrollY = window.scrollY || window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+
+        const scrollPercentage = (scrollY / (docHeight - winHeight)) * 100;
+        
+        if (scrollPercentage > 50) {
+            scroll_btn.classList.add("show");
+        } else {
+            scroll_btn.classList.remove("show");
+        }
+    });
+</script>
 {% endblock %}
 
 {% block at_about_us_footer %}{% endblock %}

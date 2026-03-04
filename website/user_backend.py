@@ -1,12 +1,12 @@
-from flask import Flask, render_template, request, jsonify, session, url_for, send_from_directory
+from flask import Flask, render_template, request, jsonify, session, url_for, redirect, flash
 import os
 import pandas as pd
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from website.backend_functions import update_dataset, generate_session_key, get_exchange_rate, get_raw_path, load_df
-from admin_backend import admin_app
-from download_backend import download_app
+
+from connect_db import mongo
 
 # default loading to AAPL
 stock_path = get_raw_path()
@@ -24,11 +24,25 @@ if closing_price_diff > 0:
     display_color = "green"
 else:
     display_color = "red"
+    
+    
+def create_app():
+    from admin_backend import admin_app
+    from download_backend import download_app
+    
+    app = Flask(__name__)
+    app.secret_key = generate_session_key()
+    
+    app.register_blueprint(admin_app)
+    app.register_blueprint(download_app)
+    
+    app.config["MONGO_URI"] = "mongodb://localhost:27017/fyp"
+    
+    mongo.init_app(app)
+    
+    return app
 
-app = Flask(__name__)
-app.register_blueprint(admin_app)
-app.register_blueprint(download_app)
-app.secret_key = generate_session_key()
+app = create_app()
 
 # get current conversion rate
 conversion_rate = get_exchange_rate()
@@ -197,10 +211,6 @@ def run_model():
         nlp_result, nlp_label, _ = predict_sentiment(**nlp_data)
     else:
         nlp_result, nlp_label = "No news headline given", 0
-        
-    # debugging purpose
-    # import time
-    # time.sleep(100000)
     
     session["result"] = {"num": [num_result, str(num_label)], "nlp": [nlp_result, str(nlp_label)]}
     
@@ -218,7 +228,7 @@ def result():
     overall_result = ""
     
     if overall_label == -2:
-        overall_result = "Strong sell position"
+        overall_result = "Strong sell position" 
     elif overall_label == -1:
         overall_result = "Sell position"
     elif overall_label == 0:
@@ -235,8 +245,8 @@ def result():
                            num_result=num_result, 
                            nlp_result=nlp_result,
                            overall_result=overall_result)
-    
+        
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=True)
     
     
