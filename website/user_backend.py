@@ -6,8 +6,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from website.backend_functions import update_dataset, generate_session_key, get_exchange_rate, get_raw_path, load_df
 
-from connect_db import mongo
-
 # default loading to AAPL
 stock_path = get_raw_path()
 for stock, path in stock_path.items():
@@ -35,10 +33,6 @@ def create_app():
     
     app.register_blueprint(admin_app)
     app.register_blueprint(download_app)
-    
-    app.config["MONGO_URI"] = "mongodb://localhost:27017/fyp"
-    
-    mongo.init_app(app)
     
     return app
 
