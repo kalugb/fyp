@@ -42,7 +42,11 @@
     <header class="header-container" style="{% if not admin_mode %} margin-top: 80px; {% endif %}">
         <nav class="top-nav-bar">
             <div>
-                <a href="{{ url_for('home') }}" class="logo"><h1>Logo</h1></a>
+                <a href="{{ url_for('home') }}" class="logo" style="display: flex; align-items: center">
+                    <img src="{{ url_for('static', filename='logo.png') }}"
+                    style="height: auto; width: 10%">
+                    <h2 style="color: white;">Stock Market Analysis</h2>
+                </a>
             </div>
             <div class="nav-links">
                 {% block at_about_us %}
@@ -99,7 +103,7 @@
 
     <footer>
         <p>Stock Market Analysis&copy; | Daniel Yong 2026</p>
-        <p>Contact: 0123456789 {% block at_about_us_footer %}<a href={{ url_for('about_us') }}>| About Us</a></p>{% endblock %}
+        <p>Contact: 0123456789 | {% block at_about_us_footer %}<a href={{ url_for('about_us') }}>About Us</a></p>{% endblock %}
         {% if admin_mode %}
         <p style="color: red;"><b>Currently in Admin Mode</b></p>
         {% endif %}

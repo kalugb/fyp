@@ -1,11 +1,24 @@
+@font-face {
+    font-family: "Trebuchet MS";
+    src: url("/static/fonts/Trebuchet-MS-Italic.ttf") format("truetype");
+    font-style: italic;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Trebuchet MS";
+    src: url("/static/fonts/trebuc.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
 /*All below are for the nav styling (ts is absolute vibe)*/
 :root {
     --primary-nav-color: lightgrey;
     --primary-link-hover-color: #f1f1f1;
     --primary-button-hover-color: grey;
     --header-nav-font-size: 18px;
-    --nav-color: #81bdef;
-    --nav-color-list-hover: #0d47a1;
+    --nav-color: #42b9ce;
+    --nav-color-list-hover: #1915a8;
     --nav-height: 80px;
     --admin-display-height: 60px;
 }
@@ -15,14 +28,19 @@ html {
     height: 100%;
 }
 body {
-    margin: 10px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    font-family: "Trebuchet MS", sans-serif;
+    color: #333333;
+    margin: 0px;
+    background-color: #f6f5f5;
 }
 main {
     flex: 1;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 footer {
     display: flex;
@@ -30,8 +48,6 @@ footer {
     justify-content: center;
     align-items: center;
     margin-top: 10px;
-    margin-left: -10px;
-    margin-right: -10px;
     margin-bottom: -30px;
     padding: 10px;
     border-top: 1px solid black;
@@ -41,6 +57,9 @@ footer p {
     margin: 0px;
     font-size: 15px;
     padding: 10px;
+}
+hr {
+    margin: 0;
 }
 
 /* header nav styling */
@@ -53,7 +72,6 @@ footer p {
     margin-left: 10px;
 }
 .top-nav-bar {
-    border-bottom: 1px solid lightgrey;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -266,8 +284,8 @@ footer p {
 /*Styling for this mainpage.html (gonna vibe hard)*/
 /* This also uses lots of pre-defined global css style that can be reused in other files */
 .global-button {
-    padding: 10px;
-    border-radius: 5px;
+    padding: 20px;
+    border-radius: 30px;
     font-size: 15px;
 }
 .global-img {
@@ -285,9 +303,14 @@ footer p {
     align-self: center;
 }
 .global-input {
-    padding: 10px;
+    padding: 15px;
     width: 30%;
     margin-top: 10px;
+    border-radius: 30px;
+    width: 50%;
+    max-width: 750px;
+    font-weight: 700;
+    border: none;
 }
 .global-button:hover {
     cursor: pointer;
@@ -300,19 +323,133 @@ footer p {
 .global-select:hover{
     cursor: pointer;
 }
+.stock-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+    width: 100%;
+}
+.stock-container > :first-child {
+    flex: 8;
+    min-width: 0;
+}
 .stock-info-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    flex: 2;
+}
+.stock-info-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+}
+.stock-info-grid > div {
+    border: 2px solid;
+    padding: 20px;
+    border-radius: 10px;
+    box-sizing: border-box;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    margin-top: 20px;
 }
-.stock-info-container div:nth-child(1) {
+.key-data-point-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: -20px;
+}
+.key-data-point-container p {
+    color: grey;
+    font-size: 20px;
+}
+.price-diff-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+.download-link {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.download-link p {
+    display: inline;
+    text-decoration: underline;
+    color: blue;
+}
+.download-link p:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+.input-closing-price-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 30px;
+    flex-direction: column;
+    
+    background-color: #161284ea;
+    padding: 10px;
+    color: white;
+    margin: -10px;
+
+    border-radius: 20px;
+}
+.input-closing-price {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.input-closing-price-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 1em;
+}
+.input-closing-price-row > div:nth-child(2) {
+    padding: 50px;
+    border-radius: 50px;
+    flex: 0 0 auto;
+    align-self: start;
+}
+.conversion-display-container {
+    background-color: #E8EDFF;
+    color: #0F0D75;
+    transform: translateY(30px);
+}
+.input-news-headline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-top: -25px;
+    background-color: #D3E0EA;
+    color: #222222;
+
+    border-radius: 20px;
+}
+.predict-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
 }
 .stock-list { 
     display: flex;
@@ -334,7 +471,7 @@ footer p {
 }
 .stock-active {
     font-size: calc(var(--header-nav-font-size) + 5px);
-    color: blue;
+    color: #1915a1;
 }
 .stock-link:not(.stock-active):hover {
     cursor: pointer;
@@ -349,7 +486,7 @@ footer p {
     border: none;
     background: none;
     text-decoration: none;
-    color: black;
+    color: white;
     font-size: var(--header-nav-font-size);
     white-space: nowrap;
     margin-top: 10px;
@@ -358,7 +495,7 @@ footer p {
     border-right: 0.5px solid black;
 }
 .stock-selected {
-    color: blue;
+    color: #FFD166;
     font-size: calc(var(--header-nav-font-size) + 5px);
 }
 .select-stock-btn:not(.stock-selected):hover {

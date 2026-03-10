@@ -23,6 +23,9 @@ if closing_price_diff > 0:
 else:
     display_color = "red"
     
+previous_close = raw_df.iloc[-2, :-1]["Close"].tolist()
+current_open = raw_df.iloc[-1, :-1]["Open"].tolist()
+current_volume = int(raw_df.iloc[-1, :]["Volume"].tolist()) 
     
 def create_app():
     from admin_backend import admin_app
@@ -33,7 +36,7 @@ def create_app():
     
     app.register_blueprint(admin_app)
     app.register_blueprint(download_app)
-    
+
     return app
 
 app = create_app()
@@ -55,7 +58,8 @@ def home():
     return render_template("main_page.html", name="Main Page", conversion_rate=conversion_rate, 
                            logout=logout, latest_closing_price=latest_closing_price, 
                            display_color=display_color, closing_price_diff=closing_price_diff,
-                           diff_percentage=diff_percentage)
+                           diff_percentage=diff_percentage, previous_close=previous_close, 
+                           current_open=current_open, current_volume=current_volume)
 
 @app.route("/about_us")
 def about_us():
@@ -66,10 +70,10 @@ def get_stock_data(symbol):
     using_df = load_df(symbol)
     
     stock_info = {
-        "AAPL": ["Apple Inc - NASDAQ", "Electronic Technology and Telecommunications Equipment"],
-        "MSFT": ["Microsoft Corporation - NASDAQ", "Software and Services"],
-        "BA": ["Boeing Company - NASDAQ", "Aerospace and Defense"],
-        "AMZN": ["Amazon.com, Inc. - NASDAQ", "Internet Retail and Services"]
+        "AAPL": ["Apple Inc", "Electronic Technology and Telecommunications Equipment"],
+        "MSFT": ["Microsoft Corporation", "Software and Services"],
+        "BA": ["The Boeing Company", "Aerospace and Defense"],
+        "AMZN": ["Amazon.com, Inc.", "Internet Retail and Services"]
     }
     
     # get latest closing price 
@@ -82,13 +86,20 @@ def get_stock_data(symbol):
     else:
         display_color = "red"
         
+    previous_close = using_df.iloc[-2, :-1]["Adj Close"].tolist()
+    current_open = using_df.iloc[-1, :-1]["Open"].tolist()
+    current_volume = int(using_df.iloc[-1, :]["Volume"].tolist())
+        
     return jsonify({
         "latest_closing_price": latest_closing_price,
         "closing_price_diff": closing_price_diff,
         "diff_percentage": diff_percentage,
         "display_color": display_color,
         "stock_symbol_name": stock_info[symbol][0],
-        "stock_brief_info": stock_info[symbol][1]
+        "stock_brief_info": stock_info[symbol][1],
+        "previous_close": previous_close,
+        "current_open": current_open,
+        "current_volume": current_volume
     })
     
 

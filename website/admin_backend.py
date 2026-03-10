@@ -8,8 +8,6 @@ base_dir = os.path.abspath(os.path.dirname(__file__))
 
 admin_app = Blueprint("admin", __name__)
 
-from connect_db import mongo
-
 ADMIN = "admin"
 ADMIN_HASH = b'$2b$12$ZyU4aLKP.uHiY8ODSflKHeXPTgOeqIyiJ8WBVvgXw7qG7fGN4.5V.' # admin
         
