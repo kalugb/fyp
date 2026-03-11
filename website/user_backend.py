@@ -252,6 +252,6 @@ def result():
                            overall_result=overall_result)
         
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True)
+    app.run(debug=True, use_reloader=False)
     
     

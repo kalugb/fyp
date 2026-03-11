@@ -7,23 +7,30 @@
     <h1 style="margin-left: 5px;">Admin Login</h1>
     <br>
     <a href="{{ url_for('home') }}" class="return-home"> << Back to main page</a>
-    <br> <hr>
+    <br> 
     
-    <form class="form-container" style="gap: 10px;" action="{{ url_for('admin.admin_login') }}" method="POST">
-        <h2>Admin Login</h2>
+    <div style="margin-bottom: 50px; margin-top: 50px;">
+        <form class="form-container" style="gap: 10px;" action="{{ url_for('admin.admin_login') }}" method="POST">
+            <h1>Admin Login</h1>
 
-        <label for="username" class="label-login">Username: </label> <br>
-        <input type="text" placeholder="Username" class="input-login" id="username-input" name="username"> <br>
+            <div class="form-admin-input">
+                <label for="username" class="label-login">Username: </label> <br>
+                <input type="text" placeholder="Username" class="input-login" id="username-input" name="username"> <br>
+            </div>
 
-        <label for="password" class="label-login">Password: </label> <br>
-        <input type="password" placeholder="Password" class="input-login" id="password-input" name="password"> <br>
+            <div class="form-admin-input">
+                <label for="password" class="label-login">Password: </label> <br>
+                <input type="password" placeholder="Password" class="input-login" id="password-input" name="password"> <br>
+            </div>
 
-        <button class="global-button" style="margin-right: 100px;" type="submit">
-            Sign In
-        </button>
-        <!-- Clear input  -->
-        <button class="global-button" id="clearBtn">Clear Input</button>
-    </form>
+            <div class="form-button-container">
+                <button class="global-button" type="submit">
+                    Sign In
+                </button>
+                <button class="global-button" id="clearBtn">Clear Input</button>
+            </div>
+        </form>
+    </div>
 </main>
 
 <script>
