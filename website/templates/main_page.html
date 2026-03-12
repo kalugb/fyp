@@ -5,174 +5,214 @@
 {% block content %}
 <!-- Stock info -->
  <main>
-    <div>
-        <h1>Stock Market Analysis</h1>
-    </div>
+    <div style="opacity: 1;" id="main-page">
+        <div>
+            <h1>Stock Market Analysis</h1>
+        </div>
 
-    <hr>
-    
-    <div style="margin-bottom: 20px; margin-top: 20px;">
-        <div style="display: flex; justify-content: center; align-items: center">
-            <h2 id="stock-title">AAPL Stock Price - By TradingView</h2>
-        </div>
-        <div class="stock-list" id="stock-list">
-            <button data-symbol="AAPL" class="stock-link stock-active">AAPL</button>
-            <button data-symbol="MSFT" class="stock-link">MSFT</button>
-            <button data-symbol="BA" class="stock-link">BA</button>
-            <button data-symbol="AMZN" class="stock-link" style="border-right: none">AMZN</button>
-        </div>
-        <!-- TradingView Widget BEGIN -->
-        <div class="stock-container">
-            <div id="tv-chart-wrapper">
-                <div class="tradingview-widget-container" style="border-top-left-radius: 15px; border-bottom-right-radius: 15px;overflow: hidden">
-                    <div id="tv-chart-container" style="height: 60vh; width: 100%; "></div>
-                    <script src="https://s3.tradingview.com/tv.js"></script>
-                </div>
+        <hr>
+        
+        <div style="margin-bottom: 20px; margin-top: 20px;">
+            <div style="display: flex; justify-content: center; align-items: center">
+                <h2 id="stock-title">AAPL Stock Price - By TradingView</h2>
             </div>
-            <!-- TradingView Widget END -->
-
-            <div class="stock-info-container">
-                <div class="stock-info-grid">
-                    <div>
-                        <h1 id="stock-symbol-name">Apple Inc</h1>
-                        <p id="stock-brief-info" style="color: grey;">Electronic Technology and Telecommunications Equipment</p>
+            <div class="stock-list" id="stock-list">
+                <button data-symbol="AAPL" class="stock-link stock-active">AAPL</button>
+                <button data-symbol="MSFT" class="stock-link">MSFT</button>
+                <button data-symbol="BA" class="stock-link">BA</button>
+                <button data-symbol="AMZN" class="stock-link" style="border-right: none">AMZN</button>
+            </div>
+            <!-- TradingView Widget BEGIN -->
+            <div class="stock-container">
+                <div id="tv-chart-wrapper">
+                    <div class="tradingview-widget-container" style="border-top-left-radius: 15px; border-bottom-right-radius: 15px;overflow: hidden">
+                        <div id="tv-chart-container" style="height: 60vh; width: 100%; "></div>
+                        <script src="https://s3.tradingview.com/tv.js"></script>
                     </div>
-
-                    <div>
-                        <div class="price-diff-container">
-                            <h1 id="stock-price" style="color: {{ display_color }};">${{ '%.2f'|format(latest_closing_price) }}</h1>
-                            <p id="stock-display-color" style="color: {{ display_color }}">
-                                {% if closing_price_diff > 0 %} + {% endif %}
-                                {{ '%.2f'|format(closing_price_diff) }}
-                            </p>
-                            <p id="stock-diff-percentage" style="color: {{ display_color }}">
-                                {% if diff_percentage > 0 %} + {% endif %}
-                                {{ '%.2f'|format(diff_percentage) }} %  
-                            </p>
-                        </div>
-                        <p>*Price is based on <b>last day closing price</b></p>
-                    </div> 
                 </div>
-            </div>
-        </div>
-        <h1 style="text-align: center">Key Data Points</h1>
-        <div class="key-data-point-container">
-            <div>
-                <p>Previous Close: </p>
-                <p id="previous-close">${{ '%.2f'|format(previous_close) }}</p>
-            </div>
-            <div>
-                <p>Current Open: </p>
-                <p id="current-open">${{ '%.2f'|format(current_open) }}</p>
-            </div>
-            <div>
-                <p>Volume: </p>
-                <p id="current-volume">{{ current_volume }}</p>
-            </div>
-            <div>
-                <p>Range: </p>
-                <p>Intraday</p>
-            </div>
-        </div>
-        <div class="download-link">
-            <p id="download-link" data-symbol="AAPL">Download AAPL Dataset</p>
-        </div>
-    </div>
+                <!-- TradingView Widget END -->
 
-    <form action="{{ url_for('get_data') }}" method="post">
-        <div class="input-closing-price-container">
-            <div style="margin-bottom: 30px;">
-                <h1 style="text-align: center">Stock Market Prediction</h1>
-            </div>
-
-            <div id="input-closing-price" class="input-closing-price">
-                <div class="input-closing-price-row">
-                    <div>
-                        <label for="select-stock" class="global-label">Select Stock (Price will be auto update after selecting one): </label>
-                        <div class="select-stock-btn-list" style="margin-bottom: 20px;">
-                            <button data-symbol="AAPL" class="select-stock-btn stock-selected" type="button" style="border-left: none;">AAPL</button>
-                            <button data-symbol="MSFT" class="select-stock-btn" type="button">MSFT</button>
-                            <button data-symbol="BA" class="select-stock-btn" type="button">BA</button>
-                            <button data-symbol="AMZN" class="select-stock-btn" type="button" style="border-right: none;">AMZN</button>
+                <div class="stock-info-container">
+                    <div class="stock-info-grid">
+                        <div>
+                            <h1 id="stock-symbol-name">Apple Inc</h1>
+                            <p id="stock-brief-info" style="color: grey;">Electronic Technology and Telecommunications Equipment</p>
                         </div>
 
-                        <!-- Input number, others will auto fill in during conversion -->
-                        <label for="price-myr" class="global-label">Enter Today's Closing Price (In MYR):</label>
-                        <input type="number" id="price-myr" placeholder="RM" step="0.01" class="global-input" 
-                        name="stockPriceMYR" value="{{ '%.2f'|format(latest_closing_price * conversion_rate) }}"> <br> <br>
-
-                        <label for="price-usd" class="global-label">Enter Today's Closing Price (In USD):</label>
-                        <input type="number" id="price-usd" placeholder="USD" step="0.01" class="global-input" 
-                        name="stockPriceUSD" value="{{ '%.2f'|format(latest_closing_price) }}"> <br> <br>
-
-                        <p id="loading-msg"></p>
-                    </div>
-
-                    <div class="conversion-display-container">
-                        <p style="font-size: 120%">Current conversion rate: </p>
-                        <p style="font-size: 120%; margin-top: -10px">1 USD: {{ '%.2f'|format(conversion_rate) }} MYR</p>
-                        <p>Info from <b>Python Forex Library</b></p>
+                        <div>
+                            <div class="price-diff-container">
+                                <h1 id="stock-price" style="color: {{ display_color }};">${{ '%.2f'|format(latest_closing_price) }}</h1>
+                                <p id="stock-display-color" style="color: {{ display_color }}">
+                                    {% if closing_price_diff > 0 %} + {% endif %}
+                                    {{ '%.2f'|format(closing_price_diff) }}
+                                </p>
+                                <p id="stock-diff-percentage" style="color: {{ display_color }}">
+                                    {% if diff_percentage > 0 %} + {% endif %}
+                                    {{ '%.2f'|format(diff_percentage) }} %  
+                                </p>
+                            </div>
+                            <p>*Price is based on <b>last day closing price</b></p>
+                        </div> 
                     </div>
                 </div>
-
+            </div>
+            <h1 style="text-align: center">Key Data Points</h1>
+            <div class="key-data-point-container">
                 <div>
-                    <strong id="stock-warning" style="display: none; margin-top: 10px; color: #F59E0B; font-weight: 600"></strong> <br>
+                    <p>Previous Close: </p>
+                    <p id="previous-close">${{ '%.2f'|format(previous_close) }}</p>
                 </div>
+                <div>
+                    <p>Current Open: </p>
+                    <p id="current-open">${{ '%.2f'|format(current_open) }}</p>
+                </div>
+                <div>
+                    <p>Volume: </p>
+                    <p id="current-volume">{{ current_volume }}</p>
+                </div>
+                <div>
+                    <p>Range: </p>
+                    <p>Intraday</p>
+                </div>
+            </div>
+            <div class="download-link">
+                <p id="download-link" data-symbol="AAPL">Download AAPL Dataset</p>
             </div>
         </div>
 
-        <!--Display error message-->
-        <p>{{ error }}</p>
-        {% if show_error %}
-        <script>
-            const input_section = document.getElementById("input-closing-price");
-            input_section.scrollIntoView({behaviour: "smooth"});
+        <form action="{{ url_for('waiting_page') }}" method="post" id="prediction-form">
+            <div class="input-closing-price-container">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="text-align: center">Stock Market Prediction</h1>
+                </div>
 
-            setTimeout(() => {
-                const error_msg = {{ error | tojson }}
-                alert(error_msg);
-            }, 300);
-        </script>
-        {% endif %}
+                <div id="input-closing-price" class="input-closing-price">
+                    <div class="input-closing-price-row">
+                        <div>
+                            <label for="select-stock" class="global-label">Select Stock (Price will be auto update after selecting one): </label>
+                            <div class="select-stock-btn-list" style="margin-bottom: 20px;">
+                                <button data-symbol="AAPL" class="select-stock-btn stock-selected" type="button" style="border-left: none;">AAPL</button>
+                                <button data-symbol="MSFT" class="select-stock-btn" type="button">MSFT</button>
+                                <button data-symbol="BA" class="select-stock-btn" type="button">BA</button>
+                                <button data-symbol="AMZN" class="select-stock-btn" type="button" style="border-right: none;">AMZN</button>
+                            </div>
 
-        <br>
+                            <!-- Input number, others will auto fill in during conversion -->
+                            <label for="price-myr" class="global-label">Enter Today's Closing Price (In MYR):</label>
+                            <input type="number" id="price-myr" placeholder="RM" step="0.01" class="global-input" 
+                            name="priceMYR" value="{{ '%.2f'|format(latest_closing_price * conversion_rate) }}"> <br> <br>
 
-        <div class="input-news-headline">
-            <h1>News Headline</h1>
+                            <label for="price-usd" class="global-label">Enter Today's Closing Price (In USD):</label>
+                            <input type="number" id="price-usd" placeholder="USD" step="0.01" class="global-input" 
+                            name="priceUSD" value="{{ '%.2f'|format(latest_closing_price) }}"> <br> <br>
 
-            <label for="news-headline" class="global-label">Enter Recent News Headline (Topic):</label> <br>
-            <input type="text" id="news-headline" placeholder="News headline" class="global-input" style="width: 60%" name="newsHeadline"> <br> <br>
+                            <p id="loading-msg"></p>
+                        </div>
 
-            <p style="margin-top: -20px; color: rgb(112, 112, 112);">Example: "Apple (AAPL) to Report Earnings on Monday"</p>
-        </div>
+                        <div class="conversion-display-container">
+                            <p style="font-size: 120%">Current conversion rate: </p>
+                            <p style="font-size: 120%; margin-top: -10px">1 USD: {{ '%.2f'|format(conversion_rate) }} MYR</p>
+                            <p>Info from <b>Python Forex Library</b></p>
+                        </div>
+                    </div>
 
-        <div class="predict-container">
-            <button class="global-button", type="submit" id="predict" style=" font-size: 20px; padding-left: 2em; padding-right: 2em;">
-                Predict
-            </button>
+                    <div>
+                        <strong id="stock-warning" style="display: none; margin-top: 10px; color: #F59E0B; font-weight: 600"></strong> <br>
+                    </div>
+                </div>
+            </div>
 
-            <h4>Important: Ensure the info is correct before predicting</h4>
-            <strong style="color: red">The results made by the model are only meant for educational purpose, 
-                do not treat it as confirmation for your trading strategy.
-            </strong> <br> <br>
+            <!--Display error message-->
+            <p>{{ error }}</p>
+            {% if show_error %}
+            <script>
+                const input_section = document.getElementById("input-closing-price");
+                input_section.scrollIntoView({behaviour: "smooth"});
+
+                setTimeout(() => {
+                    const error_msg = {{ error | tojson }}
+                    alert(error_msg);
+                }, 300);
+            </script>
+            {% endif %}
+
+            <br>
+
+            <div class="input-news-headline">
+                <h1>News Headline</h1>
+
+                <label for="news-headline" class="global-label">Enter Recent News Headline (Topic):</label> <br>
+                <input type="text" id="news-headline" placeholder="News headline" class="global-input" style="width: 60%" name="textSentiment"> <br> <br>
+
+                <p style="margin-top: -20px; color: rgb(112, 112, 112);">Example: "Apple (AAPL) to Report Earnings on Monday"</p>
+            </div>
+
+            <div class="predict-container">
+                <button class="global-button", type="button" id="predict" style=" font-size: 20px; padding-left: 2em; padding-right: 2em;"
+                    onclick="showConfirmationBox()">
+                    Predict
+                </button>
+
+                <h4>Important: Ensure the info is correct before predicting</h4>
+                <strong style="color: red">The results made by the model are only meant for educational purpose, 
+                    do not treat it as confirmation for your trading strategy.
+                </strong> <br> <br>
+            </div>
+
+            <div>
+                <button class="floating-btn" type="button" id="scroll-to-top-btn">
+                    &uarr;
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="confirmation-box" id="confirmation-box" style="display: none;">
+        <div class="input-confirmation-box">
+            <div>
+                <h1>Confirmation</h1>
+            </div>
+
+            <div>
+                <h3 style="text-align: center">Closing Price</h3>
+                <p id="display-myr-input">Closing Price (MYR): </p>
+                <p id="display-usd-input" style="margin-top: -10px;">Closing Price (USD): </p>
+            </div>
+
+            <div>   
+                <h3>News Headline: </h3>
+                <p id="display-news-headline-input" style="margin-top: -10px;"></p>
+            </div>
+
+            <div>
+                <p id="warning-msg">Tips: It is better to include news headlines to <b>improve prediction accuracy</b></p>
+            </div>
         </div>
 
         <div>
-            <button class="floating-btn" type="button" id="scroll-to-top-btn">
-                &uarr;
-            </button>
+            <div style="text-align: center">
+                <p>Are you sure the data is correct?</p>
+                <p style="color: red;">Disclaimer: The prediction result is not guaranteed to be accurate</p>
+            </div> 
+            <div>
+                <button id="yes" class="confirm-btn">Yes</button>
+                <button id="no" class="confirm-btn">No</button>
+            </div>
         </div>
-    </form>
+    </div>
 </main>
 
 <script>
     const select_stock_btns = document.querySelectorAll(".select-stock-btn");
     const price_myr = document.getElementById("price-myr");
     const price_usd = document.getElementById("price-usd");
+    const news_headline = document.getElementById("news-headline");
     const retrieve_btn = document.getElementById("retrieve-data");
     const scroll_btn = document.getElementById("scroll-to-top-btn");
     const download_link = document.getElementById("download-link");
     const stock_link = document.querySelectorAll(".stock-link");
+    const main_page = document.getElementById("main-page");
+    const prediction_form = document.getElementById("prediction-form");
+    const confirmation_box = document.getElementById("confirmation-box");
 
     // load chart after another stock is selected
     function loadChart(symbol) {
@@ -362,5 +402,77 @@
 
         location.href = "/download_historical/" + stock_symbol;
     });
+
+    // confirmation box
+    function showConfirmationBox() {
+        const footer = document.querySelector("footer");
+        const header = document.querySelector("header");
+
+        const closing_myr = price_myr.value;
+        const closing_usd = price_usd.value;
+        let headline = news_headline.value;
+
+        if (closing_myr < 0 || closing_usd < 0) {
+            alert("Please input a valid closing price");
+            price_myr.value = -closing_myr;
+            price_usd.value = -closing_usd;
+            return;
+        } else if (closing_myr == 0 || closing_usd == 0) {
+            alert("Closing price cannot be 0");
+            return;
+        }
+
+        const display_myr = document.getElementById("display-myr-input");
+        const display_usd = document.getElementById("display-usd-input");
+        const display_headline = document.getElementById("display-news-headline-input");
+        const warning_msg = document.getElementById("warning-msg");
+
+        let headline_inputted;
+
+        if (!headline) {
+            headline = "(No news headline is given)";
+            headline_inputted = false;
+        } else {
+            headline_inputted = true;
+        }
+
+        // prevent scroll
+        let preventScroll = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+        main_page.style.opacity = 0.1;
+        confirmation_box.style.display = "flex";
+        main_page.addEventListener("wheel", preventScroll, {passive: false});
+        main_page.addEventListener("touchmove", preventScroll, {passive: false});
+        footer.addEventListener("wheel", preventScroll, {passive: false});
+        footer.addEventListener("touchmove", preventScroll, {passive: false});
+        header.addEventListener("wheel", preventScroll, {passive: false});
+        header.addEventListener("touchmove", preventScroll, {passive: false});
+
+        display_myr.textContent = "Closing Price (MYR): RM " + closing_myr; 
+        display_usd.textContent = "Closing Price (USD): $ " + closing_usd;
+        display_headline.textContent = headline;
+
+        headline_inputted ? warning_msg.style.display = "none" : warning_msg.style.display = "block";
+
+        document.getElementById("yes").addEventListener("click", () => {
+            prediction_form.submit();
+        });
+
+        document.getElementById("no").addEventListener("click", () => {
+            confirmation_box.style.display = "none";
+            main_page.style.opacity = 1;
+
+            main_page.removeEventListener('wheel', preventScroll, { passive: false });
+            main_page.removeEventListener('touchmove', preventScroll, { passive: false });
+            footer.removeEventListener("wheel", preventScroll, {passive: false});
+            footer.removeEventListener("touchmove", preventScroll, {passive: false});
+            header.removeEventListener("wheel", preventScroll, {passive: false});
+            header.removeEventListener("touchmove", preventScroll, {passive: false});
+        });
+    }
 </script>
 {% endblock %}
