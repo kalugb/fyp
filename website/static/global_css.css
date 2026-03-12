@@ -25,6 +25,8 @@
     --primary-color: #f6f5f5;
     --secondary-color: #3733a8;
     --third-color: #E8EDFF;
+
+    --result-container-color: #5B8DEF;
 }
 
 html {
@@ -533,7 +535,7 @@ hr {
 
     width: fit-content;
     margin: 0 auto;
-    padding: 50px;
+    padding: 30px;
 
     position: fixed;
     top: 50%;
@@ -700,6 +702,62 @@ hr {
     translate: 0px 10px;
     width: 20%;
     height: 1%;    
+}
+
+/* styling for result.html */
+.full-result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.overall-result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 35px;
+    width: fit-content;
+    margin: 0 auto;
+    margin-top: 10px;
+    border-radius: 30px;
+    background-color: var(--result-container-color);
+}
+.overall-result-container h3, .individual-result-container div h3 {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: clamp(20px, 25px, 30px);
+}
+.overall-result-container h1 {
+    font-weight: bold;
+    font-size: clamp(20px, 40px, 50px);    
+}
+.overall-result-container p {
+    white-space: wrap;
+    color: var(--primary-color);
+    text-align: center;
+    font-size: clamp(10px, 18px, 20px);
+}
+.individual-result-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    width: fit-content;
+    margin: 0 auto;
+}
+.individual-result-container div {
+    background-color: var(--result-container-color);
+    padding: 50px;
+    border-radius: 30px;
+    color: var(--primary-color);
+    font-size: clamp(10px, 16px, 20px); 
+    text-align: center; 
+    flex: 1;
+}
+.individual-result-container div p {
+    font-size: clamp(10px, 18px, 20px);
 }
 
 /* Styling for numerical_model.html and nlp_model.html*/

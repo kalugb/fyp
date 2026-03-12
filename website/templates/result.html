@@ -5,31 +5,53 @@
     <h1>Result</h1>
 
     <hr>
-    
-    <form class="result-form">
-        <label for="stock market analysis results" class="global-label">Stock Market Price Analysis: </label>
-        <input type="text" value="{{ num_result }}" class="global-input" style="margin-left: 59px" readonly> <br> <br>
 
-        <label for="news headline sentiment analysis" class="global-label">News Headline Sentiment Analysis: </label>
-        <input type="text" value="{{ nlp_result }}" class="global-input" style="margin-left:10px;" readonly> <br> <br> 
+    <div class="full-result-container">
+        <div class="overall-result-container">
+            <h3>Overall Result: </h3>
+            <h1 style="color: {{ overall_display_color }}">{{ overall_result }}</h1>
 
-        <label for="overall results" class="global-label">Overall Analysis: </label>
-        <input type="text" value="{{ overall_result }}" class="global-input" style="margin-left: 144px" readonly>
-    </form>
+            <p>{{ overall_desc }}</p>
+        </div>
+
+        <div style="text-align: center;">
+            <h1>Individual Results</h1>
+        </div>
+
+        <div class="individual-result-container">
+            <div>
+                <h3>Stock Market Price Analysis</h3>
+                <h1 style="color: {{ num_display_color }}">{{ num_result }}</h1>
+                <p>{{ num_desc }}</p>
+            </div>
+            <div>
+                <h3>News Headline Sentiment Analysis</h3>
+                <h1 style="color: {{ nlp_display_color }}">{{ nlp_result }}</h1>
+                <p>{{ nlp_desc }}</p>
+            </div>
+        </div>
+    </div>
 
     <br>
 
-    <div>
-        <p>(Note)</p>
-
+    <div style="text-align: center">
         <strong style="color: red">The results made by the model are only meant for educational purpose, 
                 do not treat it as confirmation for your trading strategy</strong>
     </div>
 
     <br> <br>
 
-    <button class="global-button" onclick="location.href = '{{ url_for('home') }}'">
-        Back to Main Page
-    </button>
+    <div style="text-align: center">
+        <button class="global-button" onclick="location.href = '{{ url_for('home') }}'">
+            Back to Main Page
+        </button>
+    </div>
 </main>
+<script>
+    const num = {{ num_input_data|tojson }};
+    const nlp = {{ nlp_input_data|tojson }};
+    
+    console.log(num);
+    console.log(nlp);
+</script>
 {% endblock %}

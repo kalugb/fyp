@@ -218,6 +218,7 @@ def run_model():
         nlp_result, nlp_label = "No news headline given", 0
     
     session["result"] = {"num": [num_result, str(num_label)], "nlp": [nlp_result, str(nlp_label)]}
+    session["input"] = {"num": num_data, "nlp": nlp_data}
     
     return jsonify(redirect=url_for("result"))
 
@@ -232,24 +233,69 @@ def result():
     overall_label = int(num_label) + int(nlp_label)
     overall_result = ""
     
-    if overall_label == -2:
-        overall_result = "Strong sell position" 
-    elif overall_label == -1:
-        overall_result = "Sell position"
-    elif overall_label == 0:
-        overall_result = "Hold position"
-    elif overall_label == 1:
-        overall_result = "Buy position"
-    elif overall_label == 2:
-        overall_result = "Strong buy position"
+    num_input_data = session["input"]["num"]["adj_close"]
+    nlp_input_data = session["input"]["nlp"]["text"]
+    nlp_input_data = nlp_input_data if nlp_input_data != "" else "(No news headline given)"
+    
+    overall_result_map = {
+        -2: ("Strong Sell Position", "red",
+             "Indicators suggest significant downward pressure on the stock price. Thus, suggesting to have strong sell position."),
+        -1: ("Sell Position", "red",
+             "Signal indicates a mildly downward trend in the stock price. Thus, suggesting to start a sell position."),
+        0: ("Hold Position", "#334155",
+            "The model detects no clear trend in the current stock price. Thus, suggesting to keep the current position."),
+        1: ("Buy Position", "rgb(68, 244, 68)",
+            "Signal indicates a midly upward trend in the stock price. Thus, suggesting to start a buy position."),
+        2: ("Strong Buy Position", "rgb(68, 244, 68)",
+            "Indicators suggest significant upward pressure on the stock price. Thus, suggesting to have strong buy position.")
+    }
+    
+    overall_result, overall_display_color, overall_desc = overall_result_map.get(
+        overall_label, ("Undefined", "Undefined", "Model result could not be determined")
+    )
+        
+    # colour display
+    num_result_map = {
+        -1: ("Sell Position", "red",
+             "Signal indicates a mildy downward trend from the moving average."),
+        0: ("Hold Position", "#334155",
+            "Signal indicates the current prices is around the moving average, thus no clear trend"),
+        1: ("Buy Position", "rgb(68, 244, 68)",
+            "Signal indicates a midly upward trend from the moving average")
+    }
+    
+    num_result, num_display_color, num_desc = num_result_map.get(
+        int(num_label), ("Undefined", "Undefined", "Model result could not be determined")
+    )
+    
+    nlp_result_map = {
+        -1: ("Negative Sentiment", "red",
+             "The headline reflects negative sentiment toward the company, suggesting a unfavorable market reaction"),
+        0: ("Neutral Sentiment", "#334155",
+            "The headline appears informational with no strong postive or negative sentiment detected"),
+        1: ("Positive Sentiment", "rgb(68, 244, 68)",
+            "The headline reflects positive sentiment toward the company, suggesting a favorable market reaction")
+    }
+    
+    if nlp_result != "No news headline given":
+        nlp_result, nlp_display_color, nlp_desc = nlp_result_map.get(
+            int(nlp_label), ("Undefined", "Undefined", "Model result could not be determined")
+        )
     else:
-        print("Undefined results")
-        overall_result = "Undefined"
+        nlp_result, nlp_display_color, nlp_desc = "No news headline given", "#334155", "No news headline given. Unable to determine sentiment."
                 
     return render_template("result.html",
                            num_result=num_result, 
                            nlp_result=nlp_result,
-                           overall_result=overall_result)
+                           overall_result=overall_result,
+                           overall_display_color=overall_display_color,
+                           overall_desc=overall_desc,
+                           num_display_color=num_display_color,
+                           num_desc=num_desc,
+                           nlp_display_color=nlp_display_color,
+                           nlp_desc=nlp_desc,
+                           num_input_data=num_input_data,
+                           nlp_input_data=nlp_input_data)
         
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=False)
