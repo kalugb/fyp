@@ -659,6 +659,107 @@ hr {
     margin-top: 30px;
     padding: 10px;
 }
+.admin-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 40px;
+
+    background-color: var(--third-color);
+    border-radius: 30px;
+    padding: 30px;
+    margin-bottom: 75px;
+}
+.admin-model-info-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+}
+.admin-model-info-container div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--additional-color);
+    border-radius: 30px;
+    padding: 20px;
+
+    font-size: clamp(15px, 18px, 23px);
+}
+.admin-model-info-container div a {
+    font-weight: bold;
+    margin-top: 20px;
+}
+.admin-model-info-container div a:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+.show-graphs, .hide-graphs {
+    display: block;
+    align-self: end;
+}
+.show-graphs button, .hide-graphs button {
+    font: inherit;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: clamp(15px, 18px, 20px);
+    font-weight: bold;
+}
+.show-graphs button:hover, .hide-graphs button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+.graph-container {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 50px;
+}
+.graph-container div:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 50px;
+
+    background-color: var(--primary-color);
+    border-radius: 30px;
+    padding: 30px;
+}
+.admin-stock-link {
+    font: inherit;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: clamp(15px, 18px, 20px);
+    font-size: 20px;
+    cursor: default;
+}
+.admin-stock-link:not(.admin-stock-active):hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+.admin-stock-active {
+    color: var(--secondary-color);
+    font-size: 25px;
+}
+.admin-download-link {
+    text-align: center;
+}
+.admin-download-link p {
+    display: inline-block;
+    color: var(--secondary-color);
+    font-size: 18px;
+    margin-top: 30px;
+    text-decoration: underline;
+}
+.admin-download-link p:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
 
 
 /* Styling for cofirmation.html (all use global css style so none lol */
