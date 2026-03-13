@@ -27,6 +27,8 @@
     --third-color: #E8EDFF;
 
     --result-container-color: #5B8DEF;
+
+    --additional-color: #D3E0EA;
 }
 
 html {
@@ -346,6 +348,11 @@ hr {
 .global-select:hover{
     cursor: pointer;
 }
+.stock-info-wrapper {
+    padding: 25px;
+    background-color: var(--additional-color);
+    border-radius: 30px;
+}
 .stock-container {
     display: flex;
     flex-direction: row;
@@ -374,7 +381,7 @@ hr {
 }
 .stock-info-grid > div {
     border: 2px solid;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     box-sizing: border-box;
 
@@ -382,6 +389,8 @@ hr {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    background-color: white;
 }
 .key-data-point-container {
     display: flex;
@@ -608,8 +617,8 @@ hr {
     padding-left: 50px;
     padding-right: 50px;
 
-    background: var(--nav-color);
-    color: var(--primary-color);
+    background: var(--additional-color);
+    color: #333333;
 
     transform: scale(1.15);
 
@@ -711,6 +720,10 @@ hr {
     justify-content: center;
     align-items: center;
     gap: 20px;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 20px;
+    background-color: var(--additional-color);
 }
 .overall-result-container {
     display: flex;
@@ -758,6 +771,18 @@ hr {
 }
 .individual-result-container div p {
     font-size: clamp(10px, 18px, 20px);
+}
+.user-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    padding: 30px;
+    border-radius: 20px;
+    background-color: var(--additional-color);
+    width: fit-content;
+    margin: 30px auto;
+    font-size: clamp(10px, 20px, 25px); 
 }
 
 /* Styling for numerical_model.html and nlp_model.html*/
@@ -964,20 +989,20 @@ hr {
     white-space: normal;
 }
 .middle-first-model-info-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     margin-top: 20px;
     margin-bottom: 20px;
     gap: 50px;
     font-size: clamp(15px, 25px, 30px);
 }
-.middle-first-model-info-container div:nth-child(1), .middle-first-model-info-container div:nth-child(2) {
+.middle-first-model-info-container div {
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     gap: 10px;
+    flex: 1;
 }
 .get-to-action-btn {
     padding: 25px;
@@ -1036,6 +1061,10 @@ hr {
     gap: 40px;
     flex-direction: column;
     margin-bottom: 10px;
+    background-color: white;
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-bottom: -10px;
 }
 .special-mention div:nth-child(2) {
     display: flex;

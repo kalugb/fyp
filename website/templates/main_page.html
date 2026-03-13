@@ -13,50 +13,53 @@
         <hr>
         
         <div style="margin-bottom: 20px; margin-top: 20px;">
-            <div style="display: flex; justify-content: center; align-items: center">
+            <div style="text-align: center">
                 <h2 id="stock-title">AAPL Stock Price - By TradingView</h2>
             </div>
-            <div class="stock-list" id="stock-list">
-                <button data-symbol="AAPL" class="stock-link stock-active">AAPL</button>
-                <button data-symbol="MSFT" class="stock-link">MSFT</button>
-                <button data-symbol="BA" class="stock-link">BA</button>
-                <button data-symbol="AMZN" class="stock-link" style="border-right: none">AMZN</button>
-            </div>
-            <!-- TradingView Widget BEGIN -->
-            <div class="stock-container">
-                <div id="tv-chart-wrapper">
-                    <div class="tradingview-widget-container" style="border-top-left-radius: 15px; border-bottom-right-radius: 15px;overflow: hidden">
-                        <div id="tv-chart-container" style="height: 60vh; width: 100%; "></div>
-                        <script src="https://s3.tradingview.com/tv.js"></script>
-                    </div>
+            <div class="stock-info-wrapper">
+                <h2 style="text-align: center">Stock Display:</h2>
+                <div class="stock-list" id="stock-list">
+                    <button data-symbol="AAPL" class="stock-link stock-active">AAPL</button>
+                    <button data-symbol="MSFT" class="stock-link">MSFT</button>
+                    <button data-symbol="BA" class="stock-link">BA</button>
+                    <button data-symbol="AMZN" class="stock-link" style="border-right: none">AMZN</button>
                 </div>
-                <!-- TradingView Widget END -->
-
-                <div class="stock-info-container">
-                    <div class="stock-info-grid">
-                        <div>
-                            <h1 id="stock-symbol-name">Apple Inc</h1>
-                            <p id="stock-brief-info" style="color: grey;">Electronic Technology and Telecommunications Equipment</p>
+                <!-- TradingView Widget BEGIN -->
+                <div class="stock-container">
+                    <div id="tv-chart-wrapper">
+                        <div class="tradingview-widget-container" style="border-top-left-radius: 15px; border-bottom-right-radius: 15px;overflow: hidden">
+                            <div id="tv-chart-container" style="height: 60vh; width: 100%; "></div>
+                            <script src="https://s3.tradingview.com/tv.js"></script>
                         </div>
+                    </div>
+                    <!-- TradingView Widget END -->
 
-                        <div>
-                            <div class="price-diff-container">
-                                <h1 id="stock-price" style="color: {{ display_color }};">${{ '%.2f'|format(latest_closing_price) }}</h1>
-                                <p id="stock-display-color" style="color: {{ display_color }}">
-                                    {% if closing_price_diff > 0 %} + {% endif %}
-                                    {{ '%.2f'|format(closing_price_diff) }}
-                                </p>
-                                <p id="stock-diff-percentage" style="color: {{ display_color }}">
-                                    {% if diff_percentage > 0 %} + {% endif %}
-                                    {{ '%.2f'|format(diff_percentage) }} %  
-                                </p>
+                    <div class="stock-info-container">
+                        <div class="stock-info-grid">
+                            <div>
+                                <h1 id="stock-symbol-name" style="text-align: center">Apple Inc</h1>
+                                <p id="stock-brief-info" style="color: grey;">Electronic Technology and Telecommunications Equipment</p>
                             </div>
-                            <p>*Price is based on <b>last day closing price</b></p>
-                        </div> 
+
+                            <div>
+                                <div class="price-diff-container">
+                                    <h1 id="stock-price" style="color: {{ display_color }};">${{ '%.2f'|format(latest_closing_price) }}</h1>
+                                    <p id="stock-display-color" style="color: {{ display_color }}">
+                                        {% if closing_price_diff > 0 %} + {% endif %}
+                                        {{ '%.2f'|format(closing_price_diff) }}
+                                    </p>
+                                    <p id="stock-diff-percentage" style="color: {{ display_color }}">
+                                        {% if diff_percentage > 0 %} + {% endif %}
+                                        {{ '%.2f'|format(diff_percentage) }} %  
+                                    </p>
+                                </div>
+                                <p>*Price is based on <b>last day closing price</b></p>
+                            </div> 
+                        </div>
                     </div>
                 </div>
             </div>
-            <h1 style="text-align: center">Key Data Points</h1>
+            <h1 style="text-align: center">Key Data Points (From Last Closing Price)</h1>
             <div class="key-data-point-container">
                 <div>
                     <p>Previous Close: </p>

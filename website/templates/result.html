@@ -15,7 +15,7 @@
         </div>
 
         <div style="text-align: center;">
-            <h1>Individual Results</h1>
+            <h1>Model Individual Results</h1>
         </div>
 
         <div class="individual-result-container">
@@ -32,7 +32,13 @@
         </div>
     </div>
 
-    <br>
+    <div class="user-input">
+        <h3>Input Summary: </h3>
+        <p>Closing Price (USD): <b>${{ num_input_data }}</b></p>
+        <p>News Headline: <b>{{ nlp_input_data }}</b></p>
+    </div>
+
+    <br> <br>
 
     <div style="text-align: center">
         <strong style="color: red">The results made by the model are only meant for educational purpose, 
