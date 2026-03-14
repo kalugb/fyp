@@ -55,8 +55,9 @@ def inject_admin_mode():
 @app.route("/")
 def home():
     logout = session.pop("logout", False)
+    scroll = session.pop("home_from_about_us", False)
     return render_template("main_page.html", name="Main Page", conversion_rate=conversion_rate, 
-                           logout=logout, latest_closing_price=latest_closing_price, 
+                           logout=logout, scroll=scroll, latest_closing_price=latest_closing_price, 
                            display_color=display_color, closing_price_diff=closing_price_diff,
                            diff_percentage=diff_percentage, previous_close=previous_close, 
                            current_open=current_open, current_volume=current_volume)
@@ -64,6 +65,11 @@ def home():
 @app.route("/about_us")
 def about_us():
     return render_template("about_us.html")
+
+@app.route("/home_from_about_us")
+def home_from_about_us():
+    session["home_from_about_us"] = True
+    return redirect(url_for("home"))
     
 @app.route("/get_stock_data/<symbol>")
 def get_stock_data(symbol):    
@@ -298,6 +304,6 @@ def result():
                            nlp_input_data=nlp_input_data)
         
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=True)
     
     

@@ -3,6 +3,25 @@
 {% block main_page %}{% endblock %}
 
 {% block content %}
+
+<!-- Home through about us -->
+{% if scroll %}
+    <script>
+        window.onload = function() {
+            const form = document.getElementById("prediction-form");
+
+            if (form) {
+                const elementPosition = form.getBoundingClientRect().top + window.pageYOffset;
+                const offset = 100;
+
+                window.scrollTo({
+                    top: elementPosition - offset,
+                    behavior: "smooth"
+                });
+            } 
+        }
+    </script>
+{% endif %}
 <!-- Stock info -->
  <main>
     <div style="opacity: 1;" id="main-page">
@@ -50,7 +69,7 @@
                                     </p>
                                     <p id="stock-diff-percentage" style="color: {{ display_color }}">
                                         {% if diff_percentage > 0 %} + {% endif %}
-                                        {{ '%.2f'|format(diff_percentage) }} %  
+                                        {{ '%.2f'|format(diff_percentage) }}%
                                     </p>
                                 </div>
                                 <p>*Price is based on <b>last day closing price</b></p>
@@ -58,9 +77,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="download-link">
+                    <p id="download-link" data-symbol="AAPL">Download AAPL Dataset</p>
+                </div>
             </div>
             <h1 style="text-align: center">Key Data Points (From Last Closing Price)</h1>
-            <div class="key-data-point-container">
+            <div class="key-data-point-container" id="above-form">
                 <div>
                     <p>Previous Close: </p>
                     <p id="previous-close">${{ '%.2f'|format(previous_close) }}</p>
@@ -77,9 +99,6 @@
                     <p>Range: </p>
                     <p>Intraday</p>
                 </div>
-            </div>
-            <div class="download-link">
-                <p id="download-link" data-symbol="AAPL">Download AAPL Dataset</p>
             </div>
         </div>
 
@@ -286,10 +305,10 @@
                 stock_price.textContent = "$" + data.latest_closing_price.toFixed(2);
                 if (data.closing_price_diff > 0) {
                     stock_display_color.textContent = "+ " + data.closing_price_diff.toFixed(2);
-                    stock_diff_percentage.textContent = "+ " + data.diff_percentage.toFixed(2);
+                    stock_diff_percentage.textContent = "+ " + data.diff_percentage.toFixed(2) + "%";
                 } else {
                     stock_display_color.textContent = data.closing_price_diff.toFixed(2);
-                    stock_diff_percentage.textContent = data.diff_percentage.toFixed(2) + " %";
+                    stock_diff_percentage.textContent = data.diff_percentage.toFixed(2) + "%";
                 }
 
                 stock_symbol_name.textContent = data.stock_symbol_name;

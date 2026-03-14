@@ -170,18 +170,22 @@ hr {
     box-sizing: border-box;
 }
 .select {
-    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 15px;
     cursor: pointer;
     transition: background 0.3s;
+
+    color: var(--primary-color);
 }
 .select-clicked {
     border: 1px solid black;
     border-radius: 0.5em;
     box-shadow: 0, 0, 0.8em rgba(0, 0, 0, 0.1);
+
+    background-color: var(--primary-color);
+    color: var(--secondary-color)
 }
 .select:hover {
     color: var(--nav-color-list-hover);
@@ -194,7 +198,6 @@ hr {
 }
 .selected {
     font-size: var(--header-nav-font-size);
-    color: whitesmoke;
 }
 .caret {
     width: 0;
@@ -1072,7 +1075,7 @@ hr {
 }
 .top-section-sub-slogan {
     font-size: clamp(1rem, 1.5vw, 2rem);
-    margin-top: -40px;
+    margin-top: -30px;
 }
 .middle-first-container {
     background-image: url('/static/nueral.jpg');
