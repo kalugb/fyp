@@ -215,15 +215,15 @@ def run_model():
     num_data = data["num_data"]
     nlp_data = data["nlp_data"]
 
-    num_result, num_label, _ = predict_position(**num_data)
+    num_result, num_label, num_probs = predict_position(**num_data)
     
     if nlp_data["text"] != "":
         from shared_utils.nlp_inference import predict_sentiment
-        nlp_result, nlp_label, _ = predict_sentiment(**nlp_data)
+        nlp_result, nlp_label, nlp_probs = predict_sentiment(**nlp_data)
     else:
-        nlp_result, nlp_label = "No news headline given", 0
+        nlp_result, nlp_label, nlp_probs = "No news headline given", 0, [0, 0, 0]
     
-    session["result"] = {"num": [num_result, str(num_label)], "nlp": [nlp_result, str(nlp_label)]}
+    session["result"] = {"num": [num_result, str(num_label), num_probs], "nlp": [nlp_result, str(nlp_label), nlp_probs]}
     session["input"] = {"num": num_data, "nlp": nlp_data}
     
     return jsonify(redirect=url_for("result"))
@@ -233,8 +233,8 @@ def run_model():
 def result():
     data = session["result"]
     
-    num_result, num_label = data["num"]
-    nlp_result, nlp_label = data["nlp"]
+    num_result, num_label, num_probs = data["num"]
+    nlp_result, nlp_label, nlp_probs = data["nlp"]
     
     overall_label = int(num_label) + int(nlp_label)
     overall_result = ""
@@ -288,7 +288,7 @@ def result():
             int(nlp_label), ("Undefined", "Undefined", "Model result could not be determined")
         )
     else:
-        nlp_result, nlp_display_color, nlp_desc = "No news headline given", "#334155", "No news headline given. Unable to determine sentiment."
+        nlp_result, nlp_display_color, nlp_desc, nlp_probs = "No news headline given", "#334155", "No news headline given. Unable to determine sentiment. Probabilities will be N/A", False
                 
     return render_template("result.html",
                            num_result=num_result, 
@@ -298,10 +298,13 @@ def result():
                            overall_desc=overall_desc,
                            num_display_color=num_display_color,
                            num_desc=num_desc,
+                           num_probs=num_probs,
                            nlp_display_color=nlp_display_color,
                            nlp_desc=nlp_desc,
+                           nlp_probs=nlp_probs,
                            num_input_data=num_input_data,
-                           nlp_input_data=nlp_input_data)
+                           nlp_input_data=nlp_input_data
+                           )
         
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True)

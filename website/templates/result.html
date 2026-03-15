@@ -23,11 +23,70 @@
                 <h3>Stock Market Price Analysis</h3>
                 <h1 style="color: {{ num_display_color }}">{{ num_result }}</h1>
                 <p>{{ num_desc }}</p>
+
+                <div class="num-probs-display">
+                    <h3 style="color: #222222;">Probability</h3>
+
+                    <div class="num-probs-individual-display">
+                        <div style="color: red;">
+                            <h4>Short Position</h4>
+                            <p>{{ '%.4f'|format(num_probs[0]) }}%</p>
+                        </div>
+                        <div style="color: #334155;">
+                            <h4>Hold Position</h4>
+                            <p>{{ '%.4f'|format(num_probs[1]) }}%</p>
+                        </div>
+                        <div style="color: green;">
+                            <h4>Long Position</h4>
+                            <p>{{ '%.4f'|format(num_probs[2]) }}%</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div>
                 <h3>News Headline Sentiment Analysis</h3>
                 <h1 style="color: {{ nlp_display_color }}">{{ nlp_result }}</h1>
                 <p>{{ nlp_desc }}</p>
+
+                {% if nlp_probs %}
+                <div class="nlp-probs-display">
+                    <h3 style="color: #222222;">Probability</h3>
+
+                    <div class="nlp-probs-individual-display">
+                        <div style="color: red;">
+                            <h4>Negative</h4>
+                            <p>{{ '%.4f'|format(nlp_probs[0]) }}%</p>
+                        </div>
+                        <div style="color: #334155;">
+                            <h4>Neutral</h4>
+                            <p>{{ '%.4f'|format(nlp_probs[1]) }}%</p>
+                        </div>
+                        <div style="color: green;">
+                            <h4>Positive</h4>
+                            <p>{{ '%.4f'|format(nlp_probs[2]) }}%</p>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="nlp-probs-display">
+                    <h3 style="color: #222222;">Probability</h3>
+                    
+                    <div class="nlp-probs-individual-display">
+                        <div style="color: red;">
+                            <h4>Negative</h4>
+                            <p>N/A</p>
+                        </div>
+                        <div style="color: #334155;">
+                            <h4>Neutral</h4>
+                            <p>N/A</p>
+                        </div>
+                        <div style="color: green;">
+                            <h4>Positive</h4>
+                            <p>N/A</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -54,10 +113,6 @@
     </div>
 </main>
 <script>
-    const num = {{ num_input_data|tojson }};
-    const nlp = {{ nlp_input_data|tojson }};
-    
-    console.log(num);
-    console.log(nlp);
+
 </script>
 {% endblock %}

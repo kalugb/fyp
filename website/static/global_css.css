@@ -783,7 +783,7 @@ hr {
 }
 .icon {
     width: 30%;
-    height: 30%;
+    height: auto;
     border-radius: 50%;
     margin-top: 25px;
 }
@@ -798,8 +798,11 @@ hr {
     flex-direction: column;
     align-items: center;
     border: 2px solid black;
-    border-radius: 5px;
+    border-radius: 50px;
     background-color: whitesmoke;
+    width: 75%;
+    overflow-y: auto;
+    max-height: 250px;
 }
 .tip-container h3, .tip-container p {
     margin: 0px;
@@ -841,7 +844,7 @@ hr {
     border-radius: 30px;
     background-color: var(--result-container-color);
 }
-.overall-result-container h3, .individual-result-container div h3 {
+.overall-result-container h3, .individual-result-container > div h3 {
     color: var(--primary-color);
     font-weight: bold;
     font-size: clamp(20px, 25px, 30px);
@@ -864,7 +867,7 @@ hr {
     width: fit-content;
     margin: 0 auto;
 }
-.individual-result-container div {
+.individual-result-container > div {
     background-color: var(--result-container-color);
     padding: 50px;
     border-radius: 30px;
@@ -873,8 +876,27 @@ hr {
     text-align: center; 
     flex: 1;
 }
-.individual-result-container div p {
+.individual-result-container > div p {
     font-size: clamp(10px, 18px, 20px);
+}
+.num-probs-display, .nlp-probs-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background-color: var(--additional-color);
+}
+.num-probs-individual-display, .nlp-probs-individual-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    padding: 0px;
+    gap: 20px;
+}
+.nlp-probs-individual-display {
+    gap: 40px;
 }
 .user-input {
     display: flex;
@@ -1013,7 +1035,6 @@ hr {
     align-items: center;    
     border: 2px solid black;
 }
-/* TODO: Change to grid */
 .model-test-img-container {
     display: grid;
     grid-template-columns: repeat(3, 2fr);

@@ -158,9 +158,9 @@ if __name__ == "__main__":
     df_dir = os.path.join(os.getcwd(), "csv_files", "raw", "historical_stock_data.csv")
     df = pd.read_csv(df_dir, index_col=0)
 
-    c = test_num_model(df)
+    a, b, c, d = predict_position(232.23, 0.029280115023907816, 261.2585681733631, 0.9776138843899168)
     
-    print(c)
-    print(type(c))
+    print(d)
+    print(type(d))
 
 

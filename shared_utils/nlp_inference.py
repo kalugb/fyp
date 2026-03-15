@@ -113,8 +113,6 @@ def predict_sentiment(text):
         probabilities = F.softmax(logits, dim=1).cpu().numpy().squeeze(0)
         sentiment_label = torch.argmax(logits, dim=1).cpu().numpy()
         sentiment = ""
-        
-        probability_list = f"Negative: {probabilities[0].item():.4f}, Neutral: {probabilities[1].item():.4f}, Positive: {probabilities[2].item():.4f}"
 
         if sentiment_label == 0:
             sentiment = "Negative"
@@ -126,7 +124,7 @@ def predict_sentiment(text):
             sentiment = "Undefined"
             print("Something went wrong. You shouldn't be here") 
         
-        return sentiment, (sentiment_label - 1).item(), probability_list
+        return sentiment, (sentiment_label - 1).item(), probabilities.tolist()
     
 def test_nlp_model(df, threshold_tuned=True, tune_class=0, fallback_class=1, untuned_class=2):
     from sklearn.metrics import confusion_matrix, classification_report
@@ -187,14 +185,13 @@ def test_nlp_model(df, threshold_tuned=True, tune_class=0, fallback_class=1, unt
        
 if __name__ == "__main__": 
     matplotlib.use("TkAgg")
-    print(predict_sentiment("Intel stock plunges as hopes for a 'clean' turnaround story meet reality"))
     
     import pandas as pd
     csv_dir = os.path.join(os.getcwd(), "csv_files")
     
     df = pd.read_csv(os.path.join(csv_dir, "raw", "enhanced_phrasebank.csv"), index_col=0)
     
-    c = test_nlp_model(df, threshold_tuned=True)
+    a, b, c = predict_sentiment("Intel stock plunges as hopes for a 'clean' turnaround story meet reality")
     print(c)
     print(type(c))    
     
