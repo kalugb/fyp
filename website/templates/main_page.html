@@ -38,10 +38,18 @@
             <div class="stock-info-wrapper">
                 <h2 style="text-align: center">Select Stock To View:</h2>
                 <div class="stock-list" id="stock-list">
-                    <button data-symbol="AAPL" class="stock-link stock-active">AAPL</button>
-                    <button data-symbol="MSFT" class="stock-link">MSFT</button>
-                    <button data-symbol="BA" class="stock-link">BA</button>
-                    <button data-symbol="AMZN" class="stock-link" style="border-right: none">AMZN</button>
+                    <div>
+                        <button data-symbol="AAPL" class="stock-link stock-active">AAPL</button>
+                    </div>
+                    <div>
+                        <button data-symbol="MSFT" class="stock-link">MSFT</button>
+                    </div>
+                    <div>
+                        <button data-symbol="BA" class="stock-link">BA</button>
+                    </div>
+                    <div>
+                        <button data-symbol="AMZN" class="stock-link" style="border-right: none">AMZN</button>
+                    </div>
                 </div>
                 <!-- TradingView Widget BEGIN -->
                 <div class="stock-container">
@@ -56,7 +64,10 @@
                     <div class="stock-info-container">
                         <div class="stock-info-grid">
                             <div>
-                                <h1 id="stock-symbol-name" style="text-align: center">Apple Inc</h1>
+                                <div class="stock-name-with-logo">
+                                    <img src="{{ url_for('static', filename='stock_pics/aapl-logo.png') }}" class="stock-logo" id="stock-logo">
+                                    <h1 id="stock-symbol-name" style="text-align: center">Apple Inc</h1>
+                                </div>
                                 <p id="stock-brief-info" style="color: grey;">Electronic Technology and Telecommunications Equipment</p>
                             </div>
 
@@ -235,6 +246,7 @@
     const main_page = document.getElementById("main-page");
     const prediction_form = document.getElementById("prediction-form");
     const confirmation_box = document.getElementById("confirmation-box");
+    const stock_logo = document.getElementById("stock-logo");
 
     // load chart after another stock is selected
     function loadChart(symbol) {
@@ -281,6 +293,7 @@
             link.classList.toggle("stock-active");
 
             const stock_symbol = link.dataset.symbol;
+            stock_logo.src = `/static/stock_pics/${stock_symbol.toLowerCase()}-logo.png`;
 
             fetch(`/get_stock_data/${stock_symbol}`)
             .then(response => response.json())
