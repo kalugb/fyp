@@ -153,7 +153,6 @@ hr {
     width: 100%;
     background: rgb(148, 253, 119);
     font-size: 18px;
-    border-top: 0.5px solid lightgrey;
 
     position: fixed;
     top: 80px;

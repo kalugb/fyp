@@ -172,9 +172,11 @@ def upload_files():
     
     accuracy_num, accuracy_nlp = 0, 0
     
-    if uploaded_num is None and uploaded_nlp is None:
-        error = "Please upload at least one file in one of the field"
-        return jsonify({"error": error}), 400
+    if uploaded_num is None:
+        from shared_utils.load_utils import get_raw_df
+        
+        stock_name = request.form.get("stock_name")
+        uploaded_num = os.path.join(os.getcwd(), "csv_files", "inference", f"{stock_name}.csv")
     
     num_dict = {}
     nlp_dict = {}

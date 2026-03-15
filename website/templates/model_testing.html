@@ -21,13 +21,22 @@
         <label for="upload numerical dataset" class="global-label">Upload new numerical dataset features (in .csv format): </label> <br>
         <label for="instruction">Column order should be like this: <b>(Date, Open, High, Low, Close, Adj Close, Volume)</b></label> <br> 
         <label for="label instruction">Date must be label. Set it in pandas using .set_index()</label> <br>
-        <input type="file" accept=".csv" name="file_num"> <br> <br> <br>
+        <input type="file" accept=".csv" name="file_num"> <br>
+        <div>
+            <label for="alternative choice">Or use predefined stock data (If no stock data uploaded): </label>
+            <div class="stock-list" id="stock-list" style="justify-content: start;">
+                <button data-symbol="AAPL" class="stock-link stock-active">AAPL</button>
+                <button data-symbol="MSFT" class="stock-link">MSFT</button>
+                <button data-symbol="BA" class="stock-link">BA</button>
+                <button data-symbol="AMZN" class="stock-link" style="border-right: none">AMZN</button>
+            </div>
+        </div> <br> <br>
 
         <label for="upload nlp dataset" class="global-label">Upload new NLP dataset features (in .csv format): </label> <br>
         <label for="instruction"></label>Column order should be like this: <b>(text, label)</b> <br> 
         <input type="file" accept=".csv" name="file_nlp"> <br> <br>
 
-        <button class="global-button" type="submit">
+        <button class="global-button" type="submit" id="test-model-btn">
             Test Model
         </button> <br>
 
@@ -75,7 +84,6 @@
         </div>
 
         <div id="num-model-test-img-container" style="display: none">
-            <hr>
             <h3>Numerical Model Test Graphs</h3>
             <div class="model-test-img-container">
                 <div class="model-img-text-box">
@@ -153,12 +161,28 @@
     const accuracy_num_result = document.getElementById("accuracy-num-result");
     const accuracy_nlp_result = document.getElementById("accuracy-nlp-result");
 
-    const num_img_container = document.getElementById("num-model-test-img-container")
-    const nlp_img_container = document.getElementById("nlp-model-test-img-container")
+    const num_img_container = document.getElementById("num-model-test-img-container");
+    const nlp_img_container = document.getElementById("nlp-model-test-img-container");
+
+    const test_model_btn = document.getElementById("test-model-btn");
+    const stock_list = document.querySelectorAll(".stock-link");
 
     let num_model_tested = false;
     let nlp_model_tested = false;
     let num_dict, nlp_dict, num_conf_matrix, nlp_conf_matrix;
+    let stock_name = "AAPL"
+
+    stock_list.forEach(stock => {
+        stock.addEventListener("click", e => {
+            e.preventDefault();
+            
+            const active_link = document.querySelector(".stock-link.stock-active");
+            active_link.classList.remove("stock-active");
+            stock.classList.toggle("stock-active");
+
+            stock_name = stock.dataset.symbol;
+        });
+    });
 
     form.addEventListener("submit", e => {
         e.preventDefault();
@@ -166,6 +190,7 @@
         nlp_container.style.display = "none";
         num_img_container.style.display = "none";
         nlp_img_container.style.display = "none";
+        test_model_btn.style.display = "none";
 
         num_short.innerHTML = "";
         num_hold.innerHTML = "";
@@ -182,6 +207,7 @@
             "Do not refresh the page. Please wait";
 
         const formData = new FormData(form);
+        formData.append("stock_name", stock_name);
 
         let dots = 0;
         const interval = setInterval(() => {
@@ -306,7 +332,9 @@
                 document.getElementById("before-results").style.display = "none";
                 display_waiting.innerHTML = "Model testing completed (Total time taken: " + total_time.toFixed(2) + " seconds)";
             }
-        })
+
+            test_model_btn.style.display = "block";
+        });
     });
 </script>
 {% endblock %}
