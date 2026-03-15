@@ -81,8 +81,6 @@
     <div>
         <p style="font-size: 20px; margin-left: 5px;"><b>Overall Accuracy</b>: {{ '%.4f'|format(metrics["accuracy"]) }}</p>
     </div>
-    
-    <hr>
 
     <div class="img-text-display">
         <div class="image-wrapper">
@@ -99,13 +97,13 @@
             <img src="{{ url_for('static', filename='images/nlp_model/threshold_tuning_class0_class1.jpg') }}">
             <p>Precision/Recall/F1 scores for all threshold (Negative/Neutral)</p>
         </div>
+    </div>
 
-        <div>
-            <button class="global-button" style="margin-bottom: 50px;" 
-                onclick="location.href = '{{ url_for('admin.model_testing') }}'">
-                Test Model Performance
-            </button>
-        </div>
+    <div style="text-align: center">
+        <button class="go-to-test-model" 
+            onclick="location.href = '{{ url_for('admin.model_testing') }}'" style="margin-bottom: 30px;">
+            Test Model Performance
+        </button>
     </div>
 
     <div class="model-button-position">

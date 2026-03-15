@@ -958,6 +958,9 @@ hr {
     grid-template-columns: repeat(3, 1fr);
     padding: 10px;
     gap: 10px;
+
+    background-color: white;
+    margin: 0 -10px;
 }
 .image-wrapper img {
     width: 100%;
@@ -968,6 +971,21 @@ hr {
 }
 .image-wrapper p {
     text-align: center;
+}
+.go-to-test-model {
+    font: inherit;
+    text-decoration: underline;
+    background-color: transparent;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: clamp(15px, 18px, 20px);
+    font-weight: bold;
+    margin-top: 30px;
+    text-align: center;
+}
+.go-to-test-model:hover {
+    transform: scale(1.05);
 }
 /* Reused above ended */
 

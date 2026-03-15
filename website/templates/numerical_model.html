@@ -97,13 +97,13 @@
             <img src="{{ url_for('static', filename="images/numerical_model/learning_curve.jpg") }}">
             <p>Learning Curve</p>
         </div>
+    </div>
 
-        <div>
-            <button class="global-button" style="margin-bottom: 50px;" 
-                onclick="location.href = '{{ url_for('admin.model_testing') }}'">
-                Test Model Performance
-            </button>
-        </div>
+    <div style="text-align: center;">
+        <button class="go-to-test-model" style="margin-bottom: 50px;" 
+            onclick="location.href = '{{ url_for('admin.model_testing') }}'">
+            Test Model Performance
+        </button>
     </div>
 
     <div class="model-button-position">
