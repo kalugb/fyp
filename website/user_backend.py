@@ -263,11 +263,11 @@ def result():
     # colour display
     num_result_map = {
         -1: ("Sell Position", "red",
-             "Signal indicates a mildy downward trend from the moving average."),
+             "Signal indicates a mildy downward trend from the moving average. Stock might move down"),
         0: ("Hold Position", "#334155",
             "Signal indicates the current prices is around the moving average, thus no clear trend"),
         1: ("Buy Position", "rgb(68, 244, 68)",
-            "Signal indicates a midly upward trend from the moving average")
+            "Signal indicates a midly upward trend from the moving average. Stock might move up")
     }
     
     num_result, num_display_color, num_desc = num_result_map.get(
